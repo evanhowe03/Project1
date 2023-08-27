@@ -71,6 +71,7 @@ public class CommandProcessor {
                     String description = lines[4].trim();
                     
                     //check its already in the database
+                    System.out.println("INDEX: "+index+" TITLE: "+title+" LENGTH: "+length+" X: "+x+" Y: "+y+" COST: "+cost+"");
                     
                     //call insert command
                     
