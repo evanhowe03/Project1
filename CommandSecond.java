@@ -16,7 +16,7 @@ public class CommandSecond {
 				System.out.println(word);
 
 				if (word.equals("insert")) {
-				//	System.out.println("YESY");
+					// System.out.println("YESY");
 					insert(scanner);
 				} else if (word.equalsIgnoreCase("search")) {
 					search(scanner);
@@ -36,11 +36,11 @@ public class CommandSecond {
 	}
 
 	public void insert(Scanner scanner) {
-		
+
 		int id = scanner.nextInt();
-		System.out.println(""+id+"");
+		scanner.nextLine();
 		String title = scanner.nextLine();
-		System.out.println(""+title+"");
+		System.out.println("" + title + "");
 		String date = scanner.next();
 		int length = scanner.nextInt();
 		short x = scanner.nextShort();
