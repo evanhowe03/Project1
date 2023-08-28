@@ -13,8 +13,7 @@ public class CommandSecond {
 
 			while (scanner.hasNext()) {
 				String word = scanner.next();
-				System.out.println(word);
-
+		
 				if (word.equals("insert")) {
 					// System.out.println("YESY");
 					insert(scanner);
@@ -40,29 +39,24 @@ public class CommandSecond {
 		int id = scanner.nextInt();
 		scanner.nextLine();
 		String title = scanner.nextLine();
-		System.out.println("" + title + "");
 		String date = scanner.next();
 		int length = scanner.nextInt();
 		short x = scanner.nextShort();
 		short y = scanner.nextShort();
 		int cost = scanner.nextInt();
+		scanner.nextLine();
 		String line = scanner.nextLine();
-		try {
-			Scanner key = new Scanner(new File(line));
-			String[] keyWord = new String[40];
-			int size = 0;
-			while (key.hasNext()) {
-				keyWord[size] = key.next();
-				size++;
-			}
-			key.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		String[] words = line.split(" ");
+		String[] keyWord = new String[40];
+		for(int i = 0; i< words.length;i++) {
+		keyWord[i] = words[i];
+				System.out.println(""+keyWord[i]+"");
 		}
+			
 		String des = scanner.nextLine();
 		// this will call the seminar to create an instance of it
 		System.out.println("ID: " + id + " TITLE: " + title + " DATE: " + date + " LENGTH: " + length + "  X: " + x
-				+ " Y: " + y + " COST: " + cost + " LINE: " + line + "DES: " + des + "");
+				+ " Y: " + y + " COST: " + cost + " LINE: " + line + " DES: " + des + "");
 	}
 
 	public void search(Scanner scanner) {
