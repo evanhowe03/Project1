@@ -1,4 +1,4 @@
-//not finished still have to fix some mismatch errors
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -16,8 +16,8 @@ public class CommandSecond {
 				System.out.println(word);
 
 				if (word.equals("insert")) {
+				//	System.out.println("YESY");
 					insert(scanner);
-					System.out.println("YESY");
 				} else if (word.equalsIgnoreCase("search")) {
 					search(scanner);
 				} else if (word.equalsIgnoreCase("delete")) {
@@ -36,8 +36,11 @@ public class CommandSecond {
 	}
 
 	public void insert(Scanner scanner) {
+		
 		int id = scanner.nextInt();
-		String title = scanner.next();
+		System.out.println(""+id+"");
+		String title = scanner.nextLine();
+		System.out.println(""+title+"");
 		String date = scanner.next();
 		int length = scanner.nextInt();
 		short x = scanner.nextShort();
