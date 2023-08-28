@@ -50,25 +50,28 @@ public class CommandSecond {
 		String[] keyWord = new String[40];
 		for(int i = 0; i< words.length;i++) {
 		keyWord[i] = words[i];
-				System.out.println(""+keyWord[i]+"");
+				//System.out.println(""+keyWord[i]+"");
 		}
 			
 		String des = scanner.nextLine();
 		// this will call the seminar to create an instance of it
-		System.out.println("ID: " + id + " TITLE: " + title + " DATE: " + date + " LENGTH: " + length + "  X: " + x
+		System.out.println("INSERT   ID: " + id + " TITLE: " + title + " DATE: " + date + " LENGTH: " + length + "  X: " + x
 				+ " Y: " + y + " COST: " + cost + " LINE: " + line + " DES: " + des + "");
 	}
 
 	public void search(Scanner scanner) {
 		int search = scanner.nextInt();
+		System.out.println("SEARCH: "+search+"");
 	}
 
 	public void delete(Scanner scanner) {
 		int delete = scanner.nextInt();
+		System.out.println("DELETE: "+delete+"");
 	}
 
 	public void print(Scanner scanner) {
 		String print = scanner.next();
+		System.out.println("PRINT: "+print+"");
 	}
 
 }
