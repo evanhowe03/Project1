@@ -12,7 +12,7 @@ public class HashTable<K, V> {
     public HashTable(int initialMemorySize, int initialHashSize) {
         
         int memSize = initialMemorySize;
-        int hashSize = initialHashSize;
+        hashSize = initialHashSize;
         size = 0;
         
         table = new Entry[hashSize];
@@ -34,13 +34,13 @@ public class HashTable<K, V> {
     
 
     public void doubleTable() {
-        
+       
     }
     
     public void insert(int key, Seminar value) {
-        
+        System.out.println("SIZE: "+size+" hashsizw: "+hashSize+"");
         //doubles the table if the table is more than %50 full
-        if (size == (hashSize/2)) {
+        if (size >= (hashSize/2)) {
             doubleTable();
             System.out.print("I doubled the table");
         }
