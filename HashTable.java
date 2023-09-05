@@ -18,6 +18,15 @@ public class HashTable<K, V> {
         table = new Entry[hashSize];
 
     }
+    
+    public void getSize() {
+        
+    }
+    
+    
+    public void getMem() {
+        
+    }
 
 
     private int firstHashValue(int key) {
@@ -138,8 +147,26 @@ public class HashTable<K, V> {
     }
 
 
-    public void print() {
+    public void print(String printmythingy) {
+        if (printmythingy.equalsIgnoreCase("blocks")) {
+            System.out.println("Freeblock List:");
+            for (int x = 0; x < hashSize; x++) {
 
+                if (table[x] == null) {
+
+                    // System.out.print(": " + x + " ");
+                }
+            }
+        }
+
+        if (printmythingy.equalsIgnoreCase("hashtable")) {
+            System.out.println("Hashtable:");
+            for (int x = 0; x < size; x++) {
+                System.out.println("ID: " + x + " " + findIndex(x) + "");
+            }
+
+        }
+        
     }
 
 }
