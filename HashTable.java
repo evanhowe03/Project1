@@ -1,88 +1,91 @@
-import java.io.*;
 
-/**
- * 
- */
-public class HashTable<K, V> {
-       
-    private int hashSize;
-    private int size;
-    private Entry[] table;
+import java.io.*;
+import java.util.*;
+import java.util.Scanner;
+
+public class CommandProcessor {
     
-    public HashTable(int initialMemorySize, int initialHashSize) {
+    public HashTable table; 
+
+    public CommandProcessor(String file, int initialMemorySize, int initialHashSize) {
         
         int memSize = initialMemorySize;
-        hashSize = initialHashSize;
-        size = 0;
+        int hashSize = initialHashSize;
         
-        table = new Entry[hashSize];
+        table = new HashTable(memSize, hashSize);
 
-    }
-    
-    private int firstHashValue(int key) {
-        
-        int M = hashSize + 1;
-        return key % M;
-    }
-    
-    private int secondHashValue(int key) {
-        
-        int M = hashSize + 1; 
-        //System.out.print((((key/M) % (M/2)) * 2) + 1);
-        return (key % M) + 1;
-    }
-    
+        try {
 
-    public void doubleTable() {
-       
-    }
-    
-    public void insert(int key, Seminar value) {
-        System.out.println("SIZE: "+size+" hashsizw: "+hashSize+"");
-        //doubles the table if the table is more than %50 full
-        if (size >= (hashSize/2)) {
-            doubleTable();
-            System.out.print("I doubled the table");
-        }
+            Scanner scanner = new Scanner(new File(file));
 
-        int hashing1 = firstHashValue(key);
-        int hashing2 = secondHashValue(key);
-        int i = 0;
+            while (scanner.hasNext()) {
+                String word = scanner.next();
         
-        while (table[hashing1] != null && i < table.length) {
-            
-            hashing1 = (hashing1 + hashing2) % table.length;
-            i++;
-        }
-        table[hashing1] = new Entry(key, value);
-        size++;
-        
-    }
-    
-    public void printTable() {
-        
-        System.out.println("\nHash Table");
- 
-        for (int i = 0; i < hashSize; i++) {
-            if (table[i] != null) {
-                System.out.println(table[i].key + " "
-                                   + table[i].value);
+                if (word.equals("insert")) {
+                    // System.out.println("YESY");
+                    insert(scanner);
+                } else if (word.equalsIgnoreCase("search")) {
+                    search(scanner);
+                } else if (word.equalsIgnoreCase("delete")) {
+                    delete(scanner);
+                } else {
+                    print(scanner);
+                }
+
             }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
+
+    }
+
+    public void insert(Scanner scanner) {
+
+        int id = scanner.nextInt();
+        scanner.nextLine();
+        String title = scanner.nextLine().trim();
+        String date = scanner.next();
+        int length = scanner.nextInt();
+        short x = scanner.nextShort();
+        short y = scanner.nextShort();
+        int cost = scanner.nextInt();
+        scanner.nextLine();
+        String line = scanner.nextLine();
+        String[] words = line.split(" ");
+    
+            
+        String des = scanner.nextLine().trim();
+        // this will call the seminar to create an instance of it
+        //System.out.println("INSERT   ID: " + id + " TITLE: " + title + " DATE: " + date + " LENGTH: " + length + "  X: " + x
+               // + " Y: " + y + " COST: " + cost + " LINE: " + line + " DES: " + des + "");
+        
+        //create a Seminar
+        Seminar mySeminar = new Seminar( id, title, date, length, x,
+            y, cost, words, des);
+        
+        //insert the seminar into the table
+        table.insert(id, mySeminar);
+        table.printTable();
         
     }
+    
     
 
-    public void delete() {
-        
+    public void search(Scanner scanner) {
+        int search = scanner.nextInt();
+        System.out.println("SEARCH: "+search+"");
     }
-    
-    public void search() {
-        
+
+    public void delete(Scanner scanner) {
+        int delete = scanner.nextInt();
+        System.out.println("DELETE: "+delete+"");
     }
-    
-    public void print() {
-        
+
+    public void print(Scanner scanner) {
+        String print = scanner.next();
+        System.out.println("PRINT: "+print+"");
     }
 
 }
