@@ -1,0 +1,29 @@
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+public class HashTableTest extends student.TestCase {
+
+	private HashTable table;
+
+	public void setUp() {
+		String title = "fish"; // Semianar title
+		String date = "0610071600"; // Seminar date
+		int length = 30; // Seminar length
+		String[] keywords = { "fish", "hampster", "wheel" }; // Seminar keywords
+		short x = 60; // Seminar x coord
+		short y = 20; // Seminar y coord
+		String desc = "Introduction to   bioinformatics and computation biology"; // Seminar description
+		int cost = 300; // Seminar cost
+		int id = 1; // Seminar ID
+		Seminar mySeminar = new Seminar(id, title, date, length, x, y, cost, keywords, desc);
+
+		table = new HashTable(50, 50);
+		id = table.findIndex(1);
+	}
+
+	public void testInsertI() {
+     assertEquals()
+penis
+	}
+}
