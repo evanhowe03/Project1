@@ -54,7 +54,7 @@ public class CommandProcessor {
         scanner.nextLine();
         String line = scanner.nextLine();
         String[] words = line.split(" ");
-    
+        
             
         String des = scanner.nextLine().trim();
         // this will call the seminar to create an instance of it
@@ -67,25 +67,25 @@ public class CommandProcessor {
         
         //insert the seminar into the table
         table.insert(id, mySeminar);
-        table.printTable();
         
     }
     
     
 
     public void search(Scanner scanner) {
-        int search = scanner.nextInt();
-        System.out.println("SEARCH: "+search+"");
+        int key = scanner.nextInt();
+        table.search(key);
+
     }
 
     public void delete(Scanner scanner) {
         int delete = scanner.nextInt();
-        System.out.println("DELETE: "+delete+"");
+  
     }
 
     public void print(Scanner scanner) {
         String print = scanner.next();
-        System.out.println("PRINT: "+print+"");
+
     }
 
 }
