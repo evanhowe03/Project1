@@ -4,26 +4,55 @@ import org.junit.Test;
 
 public class HashTableTest extends student.TestCase {
 
-	private HashTable table;
+    private HashTable table;
+    private Seminar mySeminar;
 
-	public void setUp() {
-		String title = "fish"; // Semianar title
-		String date = "0610071600"; // Seminar date
-		int length = 30; // Seminar length
-		String[] keywords = { "fish", "hampster", "wheel" }; // Seminar keywords
-		short x = 60; // Seminar x coord
-		short y = 20; // Seminar y coord
-		String desc = "Introduction to   bioinformatics and computation biology"; // Seminar description
-		int cost = 300; // Seminar cost
-		int id = 1; // Seminar ID
-		Seminar mySeminar = new Seminar(id, title, date, length, x, y, cost, keywords, desc);
+    public void setUp() {
+        String title = "fish"; // Semianar title
+        String date = "0610071600"; // Seminar date
+        int length = 30; // Seminar length
+        String[] keywords = { "fish", "hampster", "wheel" }; // Seminar keywords
+        short x = 60; // Seminar x coord
+        short y = 20; // Seminar y coord
+        String desc =
+            "Introduction to   bioinformatics and computation biology"; // Seminar
+                                                                        // description
+        int cost = 300; // Seminar cost
+        int id = 1; // Seminar ID
+         mySeminar = new Seminar(id, title, date, length, x, y, cost,
+            keywords, desc);
 
-		table = new HashTable(50, 50);
-		id = table.findIndex(1);
-	}
+        table = new HashTable(50, 50);
+        //id = table.findIndex(1);
+    }
+    
+    //tests the insert function
+    public void testInsert() {
+        
+        table.insert(3, mySeminar);
+        assertNotNull(table.searchAndReturn(3));
+        assertEquals(mySeminar, table.searchAndReturn(3));
+        
+    }
 
-	public void testInsertI() {
-     assertEquals()
-penis
-	}
+    //Tests the delete function
+    public void testDelete() {
+        
+        table.insert(3, mySeminar);
+        assertNotNull(table.searchAndReturn(3));
+       
+        table.delete(3);
+        assertNull(table.searchAndReturn(3));
+        
+    }
+    
+    public void testSearch() {
+        table.insert(4, mySeminar);
+        
+        //assertEquals(table.search(3), 3)
+    }
+    
+    public void testPrint() {
+        
+    }
 }
