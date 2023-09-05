@@ -54,12 +54,7 @@ public class CommandProcessor {
         scanner.nextLine();
         String line = scanner.nextLine();
         String[] words = line.split(" ");
-        String[] keyWord = new String[40];
-        
-        for(int i = 0; i< words.length;i++) {
-            keyWord[i] = words[i].trim();
-                //System.out.println(""+keyWord[i]+"");
-        }
+    
             
         String des = scanner.nextLine().trim();
         // this will call the seminar to create an instance of it
@@ -68,7 +63,7 @@ public class CommandProcessor {
         
         //create a Seminar
         Seminar mySeminar = new Seminar( id, title, date, length, x,
-            y, cost, keyWord, des);
+            y, cost, words, des);
         
         //insert the seminar into the table
         table.insert(id, mySeminar);
