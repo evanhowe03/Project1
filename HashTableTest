@@ -1,14 +1,23 @@
 import static org.junit.Assert.*;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
+
 import org.junit.Test;
 
 public class HashTableTest extends student.TestCase {
 
 	private HashTable table;
 	private Seminar mySeminar;
+	private final PrintStream originalOut = System.out;
+	private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
 	public void setUp() {
-		String title = "fish"; // Semianar title
+		
+		System.setOut(new PrintStream(outputStreamCaptor));
+		
+		String title = "fish"; // Seminar title
 		String date = "0610071600"; // Seminar date
 		int length = 30; // Seminar length
 		String[] keywords = { "fish", "hampster", "wheel" }; // Seminar keywords
@@ -23,14 +32,39 @@ public class HashTableTest extends student.TestCase {
 		table = new HashTable(50, 50);
 		// id = table.findIndex(1);
 	}
+	
+	public void tearDown() {
+		System.setOut(originalOut);
+	}
 
 	// tests the insert function
+	@Test
 	public void testInsert() {
-
+		
 		table.insert(3, mySeminar);
 		assertNotNull(table.searchAndReturn(3));
 		assertEquals(mySeminar, table.searchAndReturn(3));
+		
+		table.insert(3, mySeminar);
+		String printedText = outputStreamCaptor.toString().trim();
+		assertEquals("Successfully inserted record with ID 3\n" + mySeminar.toString() + "\nSize:\n"+ "Insert FAILED - There is already a record with ID " + 3, printedText);
 
+
+	}
+	
+	public void testFirstHashValue() {
+		
+		assertEquals(table.firstHashValue(0), 0);
+		assertEquals(table.firstHashValue(-1), -1);
+		assertEquals(table.firstHashValue(59), 8);
+		assertEquals(table.firstHashValue(5), 5);
+	}
+	
+	public void testSecondHashValue() {
+		assertEquals(1, table.secondHashValue(-5));
+		assertEquals(1, table.secondHashValue(5));
+		assertEquals(1, table.secondHashValue(0));
+		assertEquals(39, table.secondHashValue(1000));
 	}
 
 	// Tests the delete function
@@ -44,21 +78,66 @@ public class HashTableTest extends student.TestCase {
 
 	}
 
-	public void testSearch() {
+	public void testSearchAndReturn() {
 		table.insert(4, mySeminar);
-
-		// assertEquals(table.search(3), 3)
+		assertEquals(mySeminar, table.searchAndReturn(4));
+		
+		assertNull(table.searchAndReturn(7));
+		assertNull(table.searchAndReturn(10000));
+		//assertNull(table.searchAndReturn(-100));
 	}
 
-	public void testdouble() {
+	public void testSearch() {
+		table.insert(4, mySeminar);
+		
+		table.search(4);
+		String printedText = outputStreamCaptor.toString().trim();
+		assertEquals("Successfully inserted record with ID 4\n" + mySeminar.toString() + "\nSize:\n" + "Found record with ID 4:\r\n"
+				+ mySeminar.toString(), printedText);
+
+
+	}
+
+	public void testDoubleTable() {
+		
+		assertEquals(50, table.getHashSize());
 		for (int x = 0; x < 30; x++) {
 
 			table.insert(x, mySeminar);
 		}
-		assertEquals(50, table.getHashSize());
+		assertEquals(100, table.getHashSize());
+	}
+	
+	public void testPrintTable() {
+
+		table.printTable();
+		String printedText = outputStreamCaptor.toString().trim();
+		assertEquals("", printedText);
+		
+		table.insert(4, mySeminar);
+		String text = outputStreamCaptor.toString().trim();
+		assertEquals("Successfully inserted record with ID 4\n" + mySeminar.toString() + "\nSize:", text);
+		
+
+	}
+	
+	public void testPrintHashtable() {
+		
+		table.print("hashtable");
+		
+		String printedText = outputStreamCaptor.toString().trim();
+		assertEquals("Hashtable:\n" + "total records: 0", printedText);
+	
+	}
+	
+	public void testPrintBlocks() {
+		
+		table.print("blocks");
+		
+		String printedText = outputStreamCaptor.toString().trim();
+		assertEquals("FreeBlockList:", printedText);
+	
 	}
 
-	public void testPrint() {
 
-	}
 }
