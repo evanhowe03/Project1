@@ -44,7 +44,30 @@ public class HashTable<K, V> {
     }
 
 
-    public void doubleTable() {
+    private void doubleTable() {
+        
+        hashSize = hashSize * 2;
+        
+        Entry[] newTable = new Entry[hashSize];
+
+        // Rehash all existing entries into the new table
+        for (int i = 0; i < size; i++) {
+            if (table[i] != null) {
+                int newIndex = firstHashValue(table[i].key); // Calculate new index
+                int newStep = secondHashValue(table[i].key);   // Calculate new step
+
+                // Find an empty slot in the new table using double hashing
+                while (newTable[newIndex] != null) {
+                    newIndex = (newIndex + newStep) % hashSize;
+                }
+
+                newTable[newIndex] = table[i]; // Insert the entry into the new table
+            }
+        }
+
+        table = newTable; // Update the reference to the new table
+    
+        
 
     }
 
