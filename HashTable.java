@@ -24,10 +24,6 @@ public class HashTable<K, V> {
 		return hashSize;
 	}
 
-	public void getMem() {
-
-	}
-
 	public int firstHashValue(int key) {
 
 		int M = hashSize + 1;
@@ -67,7 +63,7 @@ public class HashTable<K, V> {
 	}
 
 	public void insert(int key, Seminar value) {
-
+		// System.out.println("SIZE: "+size+" HASHZISE: "+hashSize+"");
 		// doubles the table if the table is more than %50 full
 		if (size >= (hashSize / 2)) {
 			doubleTable();
@@ -93,23 +89,25 @@ public class HashTable<K, V> {
 
 		table[hashing1] = new Entry(key, value);
 		size++;
-		System.out.print("\nSuccessfully inserted record with ID " + key + "");
+		System.out.print("Successfully inserted record with ID " + key + "");
 		System.out.println("\n" + table[hashing1].value.toString());
 		System.out.println("Size:");
+		// TEMP FIX SOON
+		// System.out.println("Memory pool expanded to bytes");
+		// System.out.println("Hash Table Expanded to records");
 
 	}
 
-	public void printTable() {
-
-		// System.out.println("\nHash Table");
-
-		for (int i = 0; i < size; i++) {
-			if (table[i] != null) {
-				System.out.println(table[i].key + " " + table[i].value.toString());
-			}
-		}
-
-	}
+	/*
+	 * public void printTable() {
+	 * 
+	 * // System.out.println("\nHash Table");
+	 * 
+	 * for (int i = 0; i < size; i++) { if (table[i] != null) {
+	 * System.out.println(table[i].key + " " + table[i].value.toString()); } }
+	 * 
+	 * }
+	 */
 
 	public void delete(int key) {
 		// System.out.println("HAHAHA");
@@ -151,14 +149,15 @@ public class HashTable<K, V> {
 		int index = findIndex(key);
 		if (index == -1) {
 			return null;
-		} else if (table[index].value != null) {
+		}
+		// else if (table[index].value != null) {
+		else {
 			return (table[index].value);
 		}
-		return null;
 
 	}
 
-	private int findIndex(int key) {
+	public int findIndex(int key) {
 
 		int hashing1 = firstHashValue(key);
 		int hashing2 = secondHashValue(key);
@@ -201,16 +200,18 @@ public class HashTable<K, V> {
 			for (int x = 0; x < table.length; x++) {
 				if (table[x] != null) {
 					// change to use id not hash value
+					// System.out.print("\n" + table[x].key + ": " + x + "");
 					System.out.print("\n" + table[x].key + ": " + x + "");
+
 				}
 			}
 			System.out.print("\ntotal records: " + size);
-		} 
-		
+		}
+
 		if (printmythingy.equalsIgnoreCase("blocks")) {
 			System.out.print("\nFreeBlockList:");
 
-		} 
+		}
 
 	}
 }
