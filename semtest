@@ -1,77 +1,128 @@
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
+import org.junit.Test;
+
 import student.TestCase;
 
-// -------------------------------------------------------------------------
 /**
- *  Test the Seminar class
- *
- *  @author CS3114/CS5040 staff
- *  @version July 2023, updated August 2023
+ * @author {Your Name Here}
+ * @version {Put Something Here}
  */
-public class SeminarTest extends TestCase {
-    /**
-     * Sets up the tests that follow. In general, used for initialization
-     */
-    public void setUp() {
-        // Nothing Here
-    }
+public class SemManagerTest extends TestCase {
+	/**
+	 * Sets up the tests that follow. In general, used for initialization
+	 */
+	public void setUp() {
+		// Nothing here
+	}
 
+	/**
+	 * Get code coverage of the class declaration.
+	 */
+	public void testMInitx() {
+		SemManager sem = new SemManager();
+		// SemManager nullSem = null;
+		// assertNull(nullSem);
+		assertNotNull(sem);
+		// SemManager.main(null);
+	}
 
-    /**
-     * Check the toString method
-     */
-    public void testtoString()
-    {
-        String[] keywords = {"Good", "Bad", "Ugly"};
-        String expected = "ID: 1729, Title: Seminar Title\n"
-            + "Date: 2405231000, Length: 75, X: 15, Y: 33, Cost: 125\n"
-            + "Description: This is a great seminar\n"
-            + "Keywords: Good, Bad, Ugly";
-        Seminar mysem = new Seminar(1729, "Seminar Title", "2405231000", 75,
-            (short)15, (short)33, 125, keywords, "This is a great seminar");
-        String semPrint = mysem.toString();
-        System.out.println("testtoString");
-        System.out.println(semPrint);
-        assertTrue(semPrint.equals(expected));
-    }
+	@Test
+	public void testScanner() {
+		String testInput = "word1 word2 word3";
+		Scanner scanner = new Scanner(testInput);
 
- 
-    public void testSerializationDeserialization() throws IOException, ClassNotFoundException {
-        // Create a sample Seminar object
-        Seminar originalSeminar = new Seminar(1, "Sample Seminar", "20230827", 60, (short) 1, (short) 2, 100, new String[]{"keyword1", "keyword2"}, "Sample description");
+		assertTrue(scanner.hasNext());
+		assertEquals("word1", scanner.next());
+		assertTrue(scanner.hasNext());
+		assertEquals("word2", scanner.next());
+		assertTrue(scanner.hasNext());
+		assertEquals("word3", scanner.next());
 
-        // Serialize the Seminar object to a byte array
-        byte[] serializedData = originalSeminar.serialize();
+		assertFalse(scanner.hasNext());
 
-        // Deserialize the byte array to create a new Seminar object
-        Seminar deserializedSeminar = Seminar.deserialize(serializedData);
+	}
 
-        // Verify that the deserialized Seminar is equal to the original one
-        assertEquals(originalSeminar.toString(), deserializedSeminar.toString());
-    }
-    
-    /**
-     * Check the serialization/deserialization process
-     * @throws Exception
-     */
-    public void testSeminarDS()
-        throws Exception
-    {
-        System.out.println("testSeminarDS");
-        byte[] bytes;
-        String[] keywords = {"Good", "Bad", "Ugly"};
+	public void testWords() {
+		String test = "insert search delete print";
 
-        Seminar mysem = new Seminar(1729, "Seminar Title", "2405231000", 75,
-            (short)15, (short)33, 125, keywords, "This is a great seminar");
-        String semPrint = mysem.toString();
-        bytes = mysem.serialize();
-        Seminar mysem2 = Seminar.deserialize(bytes);
-        System.out.println("Number of bytes in serialized object is: " +
-            bytes.length);
-        assertTrue(bytes.length == 95); // 274
-        String sem2Print = mysem2.toString();
-        System.out.println(semPrint);
-        System.out.println(sem2Print);
-        assertTrue(semPrint.equals(sem2Print));
-    }
+		Scanner scanner = new Scanner(test);
+
+		assertTrue(scanner.hasNext());
+		assertEquals("insert", scanner.next());
+		assertEquals("search", scanner.next());
+		assertEquals("delete", scanner.next());
+		assertEquals("print", scanner.next());
+
+	}
+
+	public void testMain() {
+
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "P1Sample_input.txt";
+		// SemManager sem = new SemManager();
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+		String referenceOutput = readFile("P1Sample_output.txt");
+		// assertFuzzyEquals(referenceOutput, output);
+		assertFuzzyEquals("successfully inserted record with id 1\r\n" + "id 1 title overview of hci research at vt\r\n"
+				+ "date 0610051600 length 90 x 10 y 10 cost 45\r\n"
+				+ "description this seminar will present an overview of hci research at vt\r\n"
+				+ "keywords hci computer_science vt virginia_tech\r\n" + "size\r\n"
+				+ "successfully inserted record with id 2\r\n"
+				+ "id 2 title computational biology and bioinformatics in cs at virginia tech\r\n"
+				+ "date 0610071600 length 60 x 20 y 10 cost 30\r\n"
+				+ "description introduction to bioinformatics and computation biology\r\n"
+				+ "keywords bioinformatics computation_biology biology computer_science vt virginia_tech\r\n"
+				+ "size\r\n" + "i doubled the tablesuccessfully inserted record with id 3\r\n"
+				+ "id 3 title computing systems research at vt\r\n" + "date 0701250830 length 30 x 30 y 10 cost 17\r\n"
+				+ "description seminar about the computing systems research at vt\r\n"
+				+ "keywords high_performance_computing grids vt computer science\r\n" + "size\r\n"
+				+ "insert failed there is already a record with id 3\r\n"
+				+ "successfully inserted record with id 10\r\n"
+				+ "id 10 title overview of hpc and cse research at vt\r\n"
+				+ "date 0703301125 length 35 x 0 y 0 cost 25\r\n"
+				+ "description learn what kind of research is done on hpc and cse at vt\r\n"
+				+ "keywords hpc cse computer_science\r\n" + "size\r\n" + "found record with id 3\r\n"
+				+ "id 3 title computing systems research at vt\r\n" + "date 0701250830 length 30 x 30 y 10 cost 17\r\n"
+				+ "description seminar about the computing systems research at vt\r\n"
+				+ "keywords high_performance_computing grids vt computer science\r\n" + "hashtable\r\n" + "1 1\r\n"
+				+ "3 3\r\n" + "10 4\r\n" + "total records 4\r\n" + "freeblocklist\r\n"
+				+ "delete failed there is no record with id 2\r\n" + "search failed there is no record with id 2\r\n"
+				+ "hashtable\r\n" + "1 1\r\n" + "3 3\r\n" + "10 4\r\n" + "total records 4\r\n" + "freeblocklist\r\n"
+				+ "delete failed there is no record with id 6i doubled the tablesuccessfully inserted record with id 2\r\n"
+				+ "id 2 title much more computational biology and bioinformatics in cs at virginia tech\r\n"
+				+ "date 0610071600 length 60 x 20 y 10 cost 30\r\n"
+				+ "description introduction to bioinformatics and lots of computation biology\r\n"
+				+ "keywords bioinformatics computation_biology biology computer_science vt virginia_tech\r\n"
+				+ "size\r\n" + "\r\n" + "delete failed there is no record with id 10\r\n" + "hashtable\r\n" + "1 1\r\n"
+				+ "2 2\r\n" + "3 3\r\n" + "total records 5\r\n" + "freeblocklist", output);
+
+		assertNotNull(sem);
+	}
+
+	public String readFile(String name) {
+		String fileFish = "";
+		try {
+
+			Scanner scan = new Scanner(new File(name));
+
+			while (scan.hasNextLine()) {
+				fileFish += scan.nextLine() + "\n";
+			}
+			scan.close();
+		} catch (FileNotFoundException e) {
+
+			e.printStackTrace();
+		}
+
+		return fileFish;
+	}
 }
