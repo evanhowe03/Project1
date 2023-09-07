@@ -62,7 +62,7 @@ public class HashTable<K, V> {
 
 	}
 
-	public void insert(int key, Seminar value) {
+	public void insert(int key, Seminar value) throws Exception {
 		// System.out.println("SIZE: "+size+" HASHZISE: "+hashSize+"");
 		// doubles the table if the table is more than %50 full
 		if (size >= (hashSize / 2)) {
@@ -91,7 +91,11 @@ public class HashTable<K, V> {
 		size++;
 		System.out.print("Successfully inserted record with ID " + key + "");
 		System.out.println("\n" + table[hashing1].value.toString());
-		System.out.println("Size:");
+		
+		byte[] x = table[hashing1].value.serialize();
+		System.out.println("Size: " + x.length + "");
+	
+
 		// TEMP FIX SOON
 		// System.out.println("Memory pool expanded to bytes");
 		// System.out.println("Hash Table Expanded to records");
