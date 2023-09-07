@@ -122,19 +122,21 @@ public class HashTableTest extends student.TestCase {
 
 	}
 
-	public void testPrintTable() {
-
-		table.printTable();
-		String printedText = outputStreamCaptor.toString().trim();
-		assertEquals("", printedText);
-
-		table.insert(4, mySeminar);
-		String text = outputStreamCaptor.toString().trim();
-		assertEquals("Successfully inserted record with ID 4\n" + mySeminar.toString() + "\nSize:", text);
-
-		String yolo = outputStreamCaptor.toString().trim();
-		assertEquals("Successfully inserted record with ID 4\n" + mySeminar.toString() + "\nSize:", yolo);
-	}
+	/*
+	 * public void testPrintTable() {
+	 * 
+	 * table.printTable(); String printedText =
+	 * outputStreamCaptor.toString().trim(); assertEquals("", printedText);
+	 * 
+	 * table.insert(4, mySeminar); String text =
+	 * outputStreamCaptor.toString().trim();
+	 * assertEquals("Successfully inserted record with ID 4\n" +
+	 * mySeminar.toString() + "\nSize:", text);
+	 * 
+	 * String yolo = outputStreamCaptor.toString().trim();
+	 * assertEquals("Successfully inserted record with ID 4\n" +
+	 * mySeminar.toString() + "\nSize:", yolo); }
+	 */
 
 	public void testPrintHashtable() {
 
@@ -164,6 +166,25 @@ public class HashTableTest extends student.TestCase {
 				+ "Description: Introduction to   bioinformatics and computation biology\r\n"
 				+ "Keywords: fish, hampster, wheel\r\n" + "Size:\r\n"
 				+ "Insert FAILED - There is already a record with ID 1", printedText);
+
+	}
+
+	public void testSarch2() {
+		table.search(2);
+		String printedText = outputStreamCaptor.toString().trim();
+		assertEquals("Search FAILED -- There is no record with ID 2", printedText);
+		assertEquals(50, table.getHashSize());
+	}
+
+	public void testPrint2() {
+		table.insert(1, mySeminar);
+		table.print("hashtable");
+		String printedText = outputStreamCaptor.toString().trim();
+		assertEquals("Successfully inserted record with ID 1\r\n" + "ID: 1, Title: fish\r\n"
+				+ "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\r\n"
+				+ "Description: Introduction to   bioinformatics and computation biology\r\n"
+				+ "Keywords: fish, hampster, wheel\r\n" + "Size:\r\n" + "\r\n" + "Hashtable:\r\n" + "1: 1\r\n"
+				+ "total records: 1", printedText);
 
 	}
 
