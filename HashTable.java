@@ -34,7 +34,7 @@ public class HashTable<K, V> {
 
         int M = hashSize + 1;
         // System.out.print((((key/M) % (M/2)) * 2) + 1);
-        return (((key / M) % (M / 2)) * 2) + 1;
+        return (((key / M) % (M / 2)) * 2);
     }
 
     private void doubleTable() {
@@ -75,7 +75,7 @@ public class HashTable<K, V> {
         // doubles the table if the table is more than %50 full
         if (size >= (hashSize / 2)) {
             doubleTable();
-            System.out.print("I doubled the table");
+           // System.out.print("I doubled the table");
         }
 
         int hashing1 = firstHashValue(key);
