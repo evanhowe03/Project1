@@ -26,15 +26,15 @@ public class HashTable<K, V> {
 
     public int firstHashValue(int key) {
 
-        int M = hashSize + 1;
+        int M = hashSize;
         return key % M;
     }
 
     public int secondHashValue(int key) {
 
-        int M = hashSize + 1;
+        int M = hashSize;
         // System.out.print((((key/M) % (M/2)) * 2) + 1);
-        return (((key / M) % (M / 2)) * 2);
+        return (((key / M) % (M / 2)) * 2) + 1;
     }
 
     private void doubleTable() {
@@ -109,7 +109,7 @@ public class HashTable<K, V> {
         // System.out.println("Hash Table Expanded to records");
 
     }
-
+/*
     
      public void printTable() {
       
@@ -118,7 +118,7 @@ public class HashTable<K, V> {
      for (int i = 0; i < size; i++) { if (table[i] != null) {
          System.out.println(table[i].key + " " + table[i].value.toString()); } }
       
-     }
+     }*/
      
 
     public void delete(int key) {
