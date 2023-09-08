@@ -1,213 +1,226 @@
-import java.io.*;
+import static org.junit.Assert.*;
 
-/**
- * 
- */
-public class HashTable<K, V> {
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
-    private int hashSize;
-    private int size;
-    private Entry[] table;
-    private Boolean isDeleted;
+import org.junit.Test;
 
-    public HashTable(int initialMemorySize, int initialHashSize) {
+public class HashTableTest extends student.TestCase {
 
-        int memSize = initialMemorySize;
-        hashSize = initialHashSize;
-        size = 0;
+    private HashTable table;
+    private HashTable dou;
+    private Seminar mySeminar;
+    private Seminar empty;
+    private final PrintStream originalOut = System.out;
+    private final ByteArrayOutputStream outputStreamCaptor = new ByteArrayOutputStream();
 
-        table = new Entry[hashSize];
+    public void setUp() {
 
+        System.setOut(new PrintStream(outputStreamCaptor));
+
+        String title = "fish"; // Seminar title
+        String date = "0610071600"; // Seminar date
+        int length = 30; // Seminar length
+        String[] keywords = { "fish", "hampster", "wheel" }; // Seminar keywords
+        short x = 60; // Seminar x coord
+        short y = 20; // Seminar y coord
+        String desc = "Introduction to   bioinformatics and computation biology"; // Seminar
+                                                                                    // description
+        int cost = 300; // Seminar cost
+        int id = 1; // Seminar ID
+        mySeminar = new Seminar(id, title, date, length, x, y, cost, keywords, desc);
+        empty = new Seminar();
+        table = new HashTable(50, 50);
+        dou = new HashTable(2, 1);
+
+        // id = table.findIndex(1);
     }
 
-    public int getHashSize() {
-        return hashSize;
+    public void tearDown() {
+        System.setOut(originalOut);
     }
 
-    public int firstHashValue(int key) {
-
-        int M = hashSize;
-        return key % M;
+    public void testHashSize() {
+        assertEquals(50, table.getHashSize());
     }
+    // tests the insert function
+    @Test
+    public void testInsert() throws Exception {
 
-    public int secondHashValue(int key) {
+        table.insert(3, mySeminar);
+        assertNotNull(table.searchAndReturn(3));
+        assertEquals(mySeminar, table.searchAndReturn(3));
 
-        int M = hashSize;
-        // System.out.print((((key/M) % (M/2)) * 2) + 1);
-        return (((key / M) % (M / 2)) * 2) + 1;
-    }
-
-    private void doubleTable() {
-        
-        int oldSize = hashSize;
-        Entry[] oldTable = table;
-
-        hashSize = hashSize * 2;
-        table = new Entry[hashSize];
-
-        // Rehash all existing entries into the new table
-        for (int i = 0; i < oldSize; i++) {
-            if (oldTable[i] != null) {
-                Entry entry = oldTable[i];
-                int hash1 = firstHashValue(entry.key);
-                int hash2 = secondHashValue(entry.key);
-                
-                int j = 0;
-                while (table[hash1] != null && j < hashSize) {
-                    hash1 = (hash1 + hash2) % hashSize;
-                    j++;
-                }
-                
-                if (j < hashSize) {
-                    table[hash1] = entry;
-                } 
-            }
-            
-        }
-
-     
+        table.insert(3, mySeminar);
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("Successfully inserted record with ID 3\n"
+            + "ID: 1, Title: fish\n"
+            + "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
+            + "Description: Introduction to   bioinformatics and computation biology\n"
+            + "Keywords: fish, hampster, wheel\n"
+            + "Size: 125\n"
+            + "\n"
+            + "Insert FAILED - There is already a record with ID 3", printedText);
 
     }
-
-    public void insert(int key, Seminar value) throws Exception {
-        
-        // System.out.println("SIZE: "+size+" HASHZISE: "+hashSize+"");
-        // doubles the table if the table is more than %50 full
-        if (size >= (hashSize / 2)) {
-            doubleTable();
-           // System.out.print("I doubled the table");
-        }
-
-        int hashing1 = firstHashValue(key);
-        int hashing2 = secondHashValue(key);
-        int i = 0;
-
-        while (table[hashing1] != null && i < hashSize) {
-
-            if (table[hashing1].key == key) {
-                // table[hashing1].value = value;
-                System.out.print("\nInsert FAILED - There is already a record with ID " + key + "");
-                return;
-
-            }
-
-            hashing1 = (hashing1 + hashing2) % table.length;
-            i++;
-        }
-
-        table[hashing1] = new Entry(key, value);
-        size++;
-        System.out.println("Successfully inserted record with ID " + key + "");
-        System.out.println(table[hashing1].value.toString());
-        
-        byte[] x = table[hashing1].value.serialize();
-        System.out.println("Size: " + x.length + "");
     
-
-        // TEMP FIX SOON
-        // System.out.println("Memory pool expanded to bytes");
-        // System.out.println("Hash Table Expanded to records");
-
+    public void testFindIndex() throws Exception {
+        table.insert(3, mySeminar);
+        assertEquals(3, table.findIndex(3));
+        
+        assertEquals(-1, table.findIndex(10000));
+        
+        
     }
-/*
-    
-     public void printTable() {
-      
-     // System.out.println("\nHash Table");
-     
-     for (int i = 0; i < size; i++) { if (table[i] != null) {
-         System.out.println(table[i].key + " " + table[i].value.toString()); } }
-      
-     }*/
-     
 
-    public void delete(int key) {
-        // System.out.println("HAHAHA");
-        int index = findIndex(key);
-        // System.out.println(table[index].key + "" +
-        // table[index].value.toString());
+    public void testFirstHashValue() {
 
-        if (index == -1) {
+        assertEquals(table.firstHashValue(0), 0);
+        assertEquals(table.firstHashValue(-1), -1);
+        assertEquals(table.firstHashValue(59), 9);
+        assertEquals(table.firstHashValue(5), 5);
+    }
 
-            System.out.print("\nDelete FAILED -- There is no record with ID " + key);
+    public void testSecondHashValue() {
+        assertEquals(1, table.secondHashValue(-5));
+        assertEquals(1, table.secondHashValue(5));
+        assertEquals(1, table.secondHashValue(0));
+        assertEquals(41, table.secondHashValue(1000));
+    }
 
-        } else if (table[index].key == key && table[index] != null) {
+    // Tests the delete function
+    public void testDelete() throws Exception {
 
-            table[index] = null;
+        table.insert(3, mySeminar);
+        assertNotNull(table.searchAndReturn(3));
 
-            size--;
-            System.out.print("\nRecord with ID " + key + " succesfully deleted from the database");
-
-        }
+        table.delete(3);
+        assertNull(table.searchAndReturn(3));
 
     }
 
-    public void search(int key) {
-
-        int index = findIndex(key);
-
-        if (index == -1) {
-            System.out.print("\nSearch FAILED -- There is no record with ID " + key);
-
-        } else if (table[index].key == key && table[index] != null) {
-            System.out.println("Found record with ID " + table[index].key + ":");
-            System.out.print(table[index].value.toString());
-
-        }
+    public void testDelete2() {
+        table.delete(0);
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("Delete FAILED -- There is no record with ID 0", printedText);
     }
 
-    public Seminar searchAndReturn(int key) {
+    public void testSearchAndReturn() throws Exception {
+        table.insert(4, mySeminar);
+        assertEquals(mySeminar, table.searchAndReturn(4));
 
-        int index = findIndex(key);
-        if (index == -1) {
-            return null;
-        }
-        // else if (table[index].value != null) {
-        else {
-            return (table[index].value);
-        }
-
+        assertNull(table.searchAndReturn(7));
+        assertNull(table.searchAndReturn(10000));
+        // assertNull(table.searchAndReturn(-100));
     }
 
-    public int findIndex(int key) {
+    public void testSearch() throws Exception {
+        table.insert(4, mySeminar);
 
-        int hashing1 = firstHashValue(key);
-        int hashing2 = secondHashValue(key);
-        int i = 0;
-
-        while (table[hashing1] != null && i < hashSize) {
-
-            if (table[hashing1].key == key) {
-                return hashing1;
-            }
-            hashing1 = (hashing1 + hashing2) % table.length;
-            i++;
-
-        }
-
-        return -1; // key not found
+        table.search(4);
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("Successfully inserted record with ID 4\n"
+            + "ID: 1, Title: fish\n"
+            + "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
+            + "Description: Introduction to   bioinformatics and computation biology\n"
+            + "Keywords: fish, hampster, wheel\n"
+            + "Size: 125\n"
+            + "Found record with ID 4:\n"
+            + "ID: 1, Title: fish\n"
+            + "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
+            + "Description: Introduction to   bioinformatics and computation biology\n"
+            + "Keywords: fish, hampster, wheel", printedText);
 
     }
 
+    public void testDoubleTable() throws Exception {
 
-    public void print(String printmythingy) {
-        if (printmythingy.equalsIgnoreCase("hashtable")) {
-            System.out.print("\nHashtable:");
-            for (int x = 0; x < hashSize; x++) {
-                if (table[x] != null) {
-                    // change to use id not hash value
-                    // System.out.print("\n" + table[x].key + ": " + x + "");
-                    System.out.print("\n" + x + ": " + table[x].key + "");
+        assertEquals(50, table.getHashSize());
+        for (int x = 0; x < 30; x++) {
 
-                }
-            }
-            System.out.print("\ntotal records: " + size);
+            table.insert(x, mySeminar);
         }
-
-        if (printmythingy.equalsIgnoreCase("blocks")) {
-            System.out.print("\nFreeBlockList:");
-
-        }
+        assertEquals(100, table.getHashSize());
+        assertEquals(1, dou.getHashSize());
+        // dou.insert(1, empty);
+        // int x = dou.findIndex(1);
+        // assertNull(dou.searchAndReturn(x));
 
     }
+
+    /*
+     * public void testPrintTable() {
+     * 
+     * table.printTable(); String printedText =
+     * outputStreamCaptor.toString().trim(); assertEquals("", printedText);
+     * 
+     * table.insert(4, mySeminar); String text =
+     * outputStreamCaptor.toString().trim();
+     * assertEquals("Successfully inserted record with ID 4\n" +
+     * mySeminar.toString() + "\nSize:", text);
+     * 
+     * String yolo = outputStreamCaptor.toString().trim();
+     * assertEquals("Successfully inserted record with ID 4\n" +
+     * mySeminar.toString() + "\nSize:", yolo); }
+     */
+
+    public void testPrintHashtable() {
+
+        table.print("hashtable");
+
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("Hashtable:\n" + "total records: 0", printedText);
+
+    }
+
+    public void testPrintBlocks() {
+
+        table.print("blocks");
+
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("FreeBlockList:", printedText);
+
+    }
+
+    public void testInsert2() throws Exception {
+        table.insert(1, mySeminar);
+
+        table.insert(1, empty);
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("Successfully inserted record with ID 1\n"
+            + "ID: 1, Title: fish\n"
+            + "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
+            + "Description: Introduction to   bioinformatics and computation biology\n"
+            + "Keywords: fish, hampster, wheel\n"
+            + "Size: 125\n"
+            + "\n"
+            + "Insert FAILED - There is already a record with ID 1", printedText);
+
+    }
+
+    public void testSarch2() {
+        table.search(2);
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("Search FAILED -- There is no record with ID 2", printedText);
+        assertEquals(50, table.getHashSize());
+    }
+
+    public void testPrint2() throws Exception {
+        table.insert(1, mySeminar);
+        table.print("hashtable");
+        String printedText = outputStreamCaptor.toString().trim();
+        assertEquals("Successfully inserted record with ID 1\n"
+            + "ID: 1, Title: fish\n"
+            + "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
+            + "Description: Introduction to   bioinformatics and computation biology\n"
+            + "Keywords: fish, hampster, wheel\n"
+            + "Size: 125\n"
+            + "\n"
+            + "Hashtable:\n"
+            + "1: 1\n"
+            + "total records: 1", printedText);
+
+    }
+
 }
