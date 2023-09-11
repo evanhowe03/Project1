@@ -57,10 +57,7 @@ public class HashTable<K, V> {
 
                 int j = 0;
                 while (table[hash1] != null && j < hashSize) {
-                    if (table[hash1].tomb) {
-                        hash1 = (hash1 + hash2) % hashSize;
-                        return;
-                    }
+
                     hash1 = (hash1 + hash2) % hashSize;
                     j++;
                 }
@@ -88,9 +85,9 @@ public class HashTable<K, V> {
         int hashing2 = secondHashValue(key);
         int i = 0;
 
-        while (table[hashing1] != null && table[hashing1].tomb == true  && i < hashSize) {
+        while (table[hashing1] != null && i < hashSize) {
 
-            if (table[hashing1].key == key && table[hashing1].value != null) {
+            if (table[hashing1].key == key) {
                 // table[hashing1].value = value;
                 System.out.println(
                     "Insert FAILED - There is already a record with ID " + key
@@ -99,6 +96,7 @@ public class HashTable<K, V> {
 
             }
             /*
+            
             if (table[hashing1].tomb) {
                 table[hashing1].key = key;
             }
@@ -148,12 +146,12 @@ public class HashTable<K, V> {
                 + key);
 
         }
-        else if (table[index].key == key && table[index].value != null) {
+        else if (table[index].key == key) {
             //
 
             //table[index].key = 0;
-            table[index].value = null;
-            table[index].tomb = true;
+            table[index] = null;
+            //table[index].tomb = true;
 
             size--;
             System.out.println("Record with ID " + key
@@ -231,12 +229,9 @@ public class HashTable<K, V> {
                     // change to use id not hash value
                     // System.out.print("\n" + table[x].key + ": " + x + "");
                     // System.out.println(table[x].tomb);
-                    if (table[x].tomb) {
-                        System.out.println("" + x + ": TOMBSTONE");
-                    }
-                    else {
+                 
                         System.out.println("" + x + ": " + table[x].key + "");
-                    }
+                    
 
                 }
             }
