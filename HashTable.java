@@ -88,7 +88,7 @@ public class HashTable<K, V> {
         int hashing2 = secondHashValue(key);
         int i = 0;
 
-        while (table[hashing1] != null && i < hashSize) {
+        while (table[hashing1] != null && table[hashing1].tomb == true  && i < hashSize) {
 
             if (table[hashing1].key == key && table[hashing1].value != null) {
                 // table[hashing1].value = value;
