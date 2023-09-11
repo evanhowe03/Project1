@@ -60,7 +60,7 @@ public class SemManagerTest extends TestCase {
 
 	}
 
-	public void testMain() {
+	public void testMain() throws NumberFormatException, Exception {
 
 		SemManager sem = new SemManager();
 		String[] args = new String[3];
@@ -70,42 +70,40 @@ public class SemManagerTest extends TestCase {
 		// SemManager sem = new SemManager();
 		SemManager.main(args);
 		String output = systemOut().getHistory();
-		String referenceOutput = readFile("P1Sample_output.txt");
+		String referenceOutput = readFile("editedoutput.txt");
 		// assertFuzzyEquals(referenceOutput, output);
-		assertFuzzyEquals("successfully inserted record with id 1\r\n" + "id 1 title overview of hci research at vt\r\n"
-				+ "date 0610051600 length 90 x 10 y 10 cost 45\r\n"
-				+ "description this seminar will present an overview of hci research at vt\r\n"
-				+ "keywords hci computer_science vt virginia_tech\r\n" + "size\r\n"
-				+ "successfully inserted record with id 2\r\n"
-				+ "id 2 title computational biology and bioinformatics in cs at virginia tech\r\n"
-				+ "date 0610071600 length 60 x 20 y 10 cost 30\r\n"
-				+ "description introduction to bioinformatics and computation biology\r\n"
-				+ "keywords bioinformatics computation_biology biology computer_science vt virginia_tech\r\n"
-				+ "size\r\n" + "i doubled the tablesuccessfully inserted record with id 3\r\n"
-				+ "id 3 title computing systems research at vt\r\n" + "date 0701250830 length 30 x 30 y 10 cost 17\r\n"
-				+ "description seminar about the computing systems research at vt\r\n"
-				+ "keywords high_performance_computing grids vt computer science\r\n" + "size\r\n"
-				+ "insert failed there is already a record with id 3\r\n"
-				+ "successfully inserted record with id 10\r\n"
-				+ "id 10 title overview of hpc and cse research at vt\r\n"
-				+ "date 0703301125 length 35 x 0 y 0 cost 25\r\n"
-				+ "description learn what kind of research is done on hpc and cse at vt\r\n"
-				+ "keywords hpc cse computer_science\r\n" + "size\r\n" + "found record with id 3\r\n"
-				+ "id 3 title computing systems research at vt\r\n" + "date 0701250830 length 30 x 30 y 10 cost 17\r\n"
-				+ "description seminar about the computing systems research at vt\r\n"
-				+ "keywords high_performance_computing grids vt computer science\r\n" + "hashtable\r\n" + "1 1\r\n"
-				+ "3 3\r\n" + "10 4\r\n" + "total records 4\r\n" + "freeblocklist\r\n"
-				+ "delete failed there is no record with id 2\r\n" + "search failed there is no record with id 2\r\n"
-				+ "hashtable\r\n" + "1 1\r\n" + "3 3\r\n" + "10 4\r\n" + "total records 4\r\n" + "freeblocklist\r\n"
-				+ "delete failed there is no record with id 6i doubled the tablesuccessfully inserted record with id 2\r\n"
-				+ "id 2 title much more computational biology and bioinformatics in cs at virginia tech\r\n"
-				+ "date 0610071600 length 60 x 20 y 10 cost 30\r\n"
-				+ "description introduction to bioinformatics and lots of computation biology\r\n"
-				+ "keywords bioinformatics computation_biology biology computer_science vt virginia_tech\r\n"
-				+ "size\r\n" + "\r\n" + "delete failed there is no record with id 10\r\n" + "hashtable\r\n" + "1 1\r\n"
-				+ "2 2\r\n" + "3 3\r\n" + "total records 5\r\n" + "freeblocklist", output);
+		assertFuzzyEquals(referenceOutput, output);
 
 		assertNotNull(sem);
+	}
+
+	public void testMain2() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[4];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "P1Sample_input.txt";
+
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+
+		String referenceOutput = readFile("P1Sample_output.txt");
+		// assertFuzzyEquals(referenceOutput, output);
+		assertFuzzyEquals(referenceOutput, output);
+
+	}
+
+	public void testMain3() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args = null;
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+
+		String referenceOutput = readFile("editedoutput.txt");
+		// assertFuzzyEquals(referenceOutput, output);
+		assertFuzzyEquals(referenceOutput, output);
+
 	}
 
 	public String readFile(String name) {
