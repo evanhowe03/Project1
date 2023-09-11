@@ -62,7 +62,7 @@ public class HashTable<K, V> {
                     j++;
                 }
 
-                if (j < hashSize) {
+                if (j < hashSize && !oldTable[i].tomb) {
                     table[hash1] = entry;
                 }
             }
@@ -89,36 +89,40 @@ public class HashTable<K, V> {
 
             if (table[hashing1].key == key) {
                 // table[hashing1].value = value;
+                if (table[hashing1].tomb) {
+                    table[hashing1].key = key;
+                    table[hashing1].value = value;
+                    return;
+                } 
+            }
+            if (table[hashing1].key == key) {
                 System.out.println(
                     "Insert FAILED - There is already a record with ID " + key
                         + "");
                 return;
+                }
 
+                
+
+            if(table[hashing1].tomb==true) {
+                
+                table[hashing1].tomb = false;
             }
-            /*
-            
-            if (table[hashing1].tomb) {
-                table[hashing1].key = key;
-            }
-          
-            table[hashing1].tomb = false;
-            table[hashing1].value = value;*/
+
             hashing1 = (hashing1 + hashing2) % table.length;
             i++;
         }
-        // table[hashing1].key = key;
-        table[hashing1] = new Entry(key, value, false);
-        //table[hashing1].tomb = false;
-        size++;
-        System.out.println("Successfully inserted record with ID " + key + "");
-        System.out.println(table[hashing1].value.toString());
+    // table[hashing1].key = key;
+    table[hashing1]=new Entry(key,value,false);
+    // table[hashing1].tomb = false;
+    size++;System.out.println("Successfully inserted record with ID "+key+"");System.out.println(table[hashing1].value.toString());
 
-        byte[] x = table[hashing1].value.serialize();
-        System.out.println("Size: " + x.length + "");
+    byte[] x = table[hashing1].value
+        .serialize();System.out.println("Size: "+x.length+"");
 
-        // TEMP FIX SOON
-        // System.out.println("Memory pool expanded to bytes");
-        // System.out.println("Hash Table Expanded to records");
+    // TEMP FIX SOON
+    // System.out.println("Memory pool expanded to bytes");
+    // System.out.println("Hash Table Expanded to records");
 
     }
     /*
@@ -133,7 +137,6 @@ public class HashTable<K, V> {
      * }
      */
 
-
     public void delete(int key) {
         // System.out.println("HAHAHA");
         int index = findIndex(key);
@@ -147,12 +150,11 @@ public class HashTable<K, V> {
 
         }
         else if (table[index].key == key) {
-            //
+            
+            //table[index].key = -10;
+            //table[index] = null;
 
-            //table[index].key = 0;
-            table[index] = null;
-            //table[index].tomb = true;
-
+            table[index].tomb = true;
             size--;
             System.out.println("Record with ID " + key
                 + " successfully deleted from the database");
@@ -173,14 +175,14 @@ public class HashTable<K, V> {
         }
         else if (table[index].key == key && table[index] != null) {
             if (table[index].value != null) {
-            System.out.println("Found record with ID " + table[index].key
-                + ":");
-            System.out.println(table[index].value.toString());
-            } else
-            {
-                System.out.println("Search FAILED -- There is no record with ID "
-                    + key);
-                
+                System.out.println("Found record with ID " + table[index].key
+                    + ":");
+                System.out.println(table[index].value.toString());
+            }
+            else {
+                System.out.println(
+                    "Search FAILED -- There is no record with ID " + key);
+
             }
 
         }
@@ -229,9 +231,12 @@ public class HashTable<K, V> {
                     // change to use id not hash value
                     // System.out.print("\n" + table[x].key + ": " + x + "");
                     // System.out.println(table[x].tomb);
-                 
-                        System.out.println("" + x + ": " + table[x].key + "");
-                    
+                    if (table[x].tomb) {
+                        System.out.println("" + x + ": " + "TOMBSTONE");
+                    } else {
+
+                    System.out.println("" + x + ": " + table[x].key + "");
+                    }
 
                 }
             }
