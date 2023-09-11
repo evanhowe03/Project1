@@ -247,6 +247,20 @@ public class HashTableTest extends student.TestCase {
 
 	}
 
+	public void testHash3() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "empty.txt";
+		SemManager.main(args);
+
+		String printedText = outputStreamCaptor.toString();
+
+		assertEquals("", printedText);
+
+	}
+
 	public String readFile(String name) {
 		String fileFish = "";
 		try {
