@@ -92,7 +92,7 @@ public class HashTable<K, V> {
                 if (table[hashing1].tomb) {
                     table[hashing1].key = key;
                     table[hashing1].value = value;
-                    return;
+                    break;
                 } 
             }
             if (table[hashing1].key == key) {
