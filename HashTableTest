@@ -261,6 +261,19 @@ public class HashTableTest extends student.TestCase {
 
 	}
 
+	public void testHash4() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "double.txt";
+		SemManager.main(args);
+
+		String printedText = outputStreamCaptor.toString().trim();
+		String referenceOutput = readFile("doubleoutput.txt");
+		assertFuzzyEquals(printedText, referenceOutput);
+	}
+
 	public String readFile(String name) {
 		String fileFish = "";
 		try {
