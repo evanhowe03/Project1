@@ -66,7 +66,7 @@ public class HashTableTest extends student.TestCase {
 		assertEquals("Successfully inserted record with ID 3\n" + "ID: 1, Title: fish\n"
 				+ "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
 				+ "Description: Introduction to   bioinformatics and computation biology\n"
-				+ "Keywords: fish, hampster, wheel\n" + "Size: 125\n" + "\n"
+				+ "Keywords: fish, hampster, wheel\n" + "Size: 125\n"
 				+ "Insert FAILED - There is already a record with ID 3", printedText);
 
 	}
@@ -171,7 +171,8 @@ public class HashTableTest extends student.TestCase {
 		table.print("hashtable");
 
 		String printedText = outputStreamCaptor.toString().trim();
-		assertEquals("Hashtable:\n" + "total records: 0", printedText);
+		assertEquals("Hashtable:\n"
+				+ "total records: 0", printedText);
 
 	}
 
@@ -189,10 +190,12 @@ public class HashTableTest extends student.TestCase {
 
 		table.insert(1, empty);
 		String printedText = outputStreamCaptor.toString().trim();
-		assertEquals("Successfully inserted record with ID 1\n" + "ID: 1, Title: fish\n"
+		assertEquals("Successfully inserted record with ID 1\n"
+				+ "ID: 1, Title: fish\n"
 				+ "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
 				+ "Description: Introduction to   bioinformatics and computation biology\n"
-				+ "Keywords: fish, hampster, wheel\n" + "Size: 125\n" + "\n"
+				+ "Keywords: fish, hampster, wheel\n"
+				+ "Size: 125\n"
 				+ "Insert FAILED - There is already a record with ID 1", printedText);
 
 	}
@@ -208,10 +211,14 @@ public class HashTableTest extends student.TestCase {
 		table.insert(1, mySeminar);
 		table.print("hashtable");
 		String printedText = outputStreamCaptor.toString().trim();
-		assertEquals("Successfully inserted record with ID 1\n" + "ID: 1, Title: fish\n"
+		assertEquals("Successfully inserted record with ID 1\n"
+				+ "ID: 1, Title: fish\n"
 				+ "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
 				+ "Description: Introduction to   bioinformatics and computation biology\n"
-				+ "Keywords: fish, hampster, wheel\n" + "Size: 125\n" + "\n" + "Hashtable:\n" + "1: 1\n"
+				+ "Keywords: fish, hampster, wheel\n"
+				+ "Size: 125\n"
+				+ "Hashtable:\n"
+				+ "1: 1\n"
 				+ "total records: 1", printedText);
 
 	}
@@ -269,7 +276,7 @@ public class HashTableTest extends student.TestCase {
 		args[2] = "double.txt";
 		SemManager.main(args);
 
-		String printedText = outputStreamCaptor.toString().trim();
+		String printedText = outputStreamCaptor.toString();
 		String referenceOutput = readFile("doubleoutput.txt");
 		assertFuzzyEquals(printedText, referenceOutput);
 	}
