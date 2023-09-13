@@ -1,0 +1,47 @@
+/**
+ * 
+ */
+
+/**
+ * 
+ */
+public class SemDB {
+    
+    private HashTable table;
+    private MemoryManager mem;
+    
+    public SemDB(int initialMemorySize, int initialHashSize) {
+        
+        int memSize = initialMemorySize;
+        int hashSize = initialHashSize;
+        
+        table = new HashTable(hashSize);
+        mem = new MemoryManager(memSize);
+   
+    }
+    
+    public void add(int id, Seminar sem) throws Exception {
+        //call the insert methods for memManager and hashtable
+        table.insert(id, sem);
+        mem.insert(0, null);
+        
+    }
+    
+    public void remove(int key) {
+        
+        table.delete(key);
+        mem.remove(key);
+        
+    }
+    
+    public void search(int key) {
+        table.search(key);
+        
+    }
+    
+    public void print(String text) {
+        table.print(text);
+        
+    }
+
+}
