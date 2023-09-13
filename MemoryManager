@@ -21,10 +21,14 @@ public class MemoryManager {
     // space contains the record to be inserted, of length size.
     public Handle insert(byte[] space, int size) {
         
+        //get handle &
+        //remove the space from the freeBlockList
         Handle member = freeBlockList.allocateBlock(size);
         
-        space[member.getStart()] = (byte)size;
+        //add the byte version of the size in the memoryPool
+        memoryPool[member.getStart()] = (byte)size;
        
+        //return the handle (to the database)
         return member;
 
     }
@@ -32,6 +36,7 @@ public class MemoryManager {
     // Return the length of the record associated with theHandle
     public int length(Handle theHandle) {
         
+        //call the getLength method from the handle
         return theHandle.getLength();
         
     }
@@ -39,6 +44,9 @@ public class MemoryManager {
     // Free a block at the position specified by theHandle.
     // Merge adjacent free blocks.
     public void remove(Handle theHandle) {
+        
+        //remove the byte from the byteArray
+       
         
         //add a block of appropriate size to FBL
         freeBlockList.releaseBlock(theHandle);
@@ -51,6 +59,15 @@ public class MemoryManager {
     // copying it into space.
     // Return the number of bytes actually copied into space.
     public int get(byte[] space, Handle theHandle, int size) {
+        
+        //get the index for space from the handle
+        int pos = theHandle.getStart();
+        
+        //grab the byte stored in the index of space
+        byte bite = space[pos];
+        
+        //return the integer value of the byte
+        return (int) bite;
         
     }
     
