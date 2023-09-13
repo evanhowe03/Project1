@@ -1,0 +1,20 @@
+/**
+ * 
+ */
+
+/**
+ * 
+ */
+public class FreeBlock {
+    
+    private int startPos;
+    private int size;
+    
+    public FreeBlock(int pos, int big) {
+        
+        this.startPos = pos;
+        this.size = big;
+        
+    }
+
+}
