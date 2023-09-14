@@ -148,33 +148,28 @@ public class FreeBlockList {
     }
 
     // merges adjacent free blocks when possible
-    public void mergeFreeBlocks(int j) {
-
-        int i = j;
+    public void mergeFreeBlocks() {
+        
         // continue until you reach the end of the freeBlocks list
-        if (i < freeBlocks.size()) {
+        for (int i = 0; i < freeBlocks.size(); i++) {
             // if there is more that 1 thing in the list
             // there shouldn't ever be more than 1 thing in a linked list
             if (freeBlocks.get(i).size() >= 2) {
+                
+                //System.out.print("This is the size of the list:" + freeBlocks.get(i).size());
                 // remove the two buddies
                 freeBlocks.get(i).remove(0);
                 freeBlocks.get(i).remove(1);
-
-                // calculate the index of new block inside the blicky list
-                int newBlicky = freeBlocks.get(i + 1).size() - 1;
-
-                // calculat ethe index of the new block within the freeBlocks
-                // list
+                
                 int newIndex = i + 1;
-
+                int newArrayIndex = freeBlocks.get(i + 1).size();
+                
                 // create a new block with the bigger index and size
-                FreeBlock newBlock = new FreeBlock(newIndex + newBlicky, 2 ^ i);
-                // add the block to the higher index
-                freeBlocks.get(newIndex).add(newBlock);
+                FreeBlock biggerBlock = new FreeBlock(newIndex + newArrayIndex, 2^newIndex);
+                
+                freeBlocks.get(newIndex).add(biggerBlock);
             }
-            // increment i to the next linked list
-            // call mergeFreeBlocks on the next linked list
-            mergeFreeBlocks(i + 1);
+            
         }
 
     }
