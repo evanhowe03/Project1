@@ -1,0 +1,21 @@
+public class FreeBlockList {
+	// FreeBlock help = new FreeBlock(0, 0);
+	// private FreeBlock loveSosa;
+	private SinglyLinkedList<SinglyLinkedList<FreeBlock>> freeBlocks;
+	private SinglyLinkedList<FreeBlock> blickyGotTheStiffy;
+
+	public FreeBlockList(int size) {
+
+		double x = Math.log10(size) / Math.log10(2);
+		int listSize = (int) x;
+
+		this.freeBlocks = new SinglyLinkedList<SinglyLinkedList<FreeBlock>>();
+
+		// creates a list of singly linked lists
+		// got the singly linked list code from project 5 in 2114
+		for (int i = 0; i < listSize; i++) {
+			this.blickyGotTheStiffy = new SinglyLinkedList<FreeBlock>();
+			freeBlocks.add(i, blickyGotTheStiffy);
+		}
+
+	
