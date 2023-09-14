@@ -29,8 +29,7 @@ public class FreeBlockList {
         }
         FreeBlock intializer = new FreeBlock(listSize, 2 ^ listSize);
         freeBlocks.get(listSize - 1).add(intializer);
-        
-        System.out.println(freeBlocks.get(listSize -1).size());
+
     }
 
 
@@ -53,51 +52,51 @@ public class FreeBlockList {
 
     public void addBlock(int size) {
 
-        int bestIndex = findBestIndex(size);
-        //System.out.println("this is the best" + bestIndex);
-        /**
-         * 
-         * // allocate the free space from the freeBlockList
-         * int bestIndex = findBestIndex(size);
-         * findAndAllocateBestFitBlock(bestIndex);
-         * 
-         * // delete the allocated freeBlock
-         * int removeIndex = freeBlocks.get(bestIndex).size() - 1;
-         * 
-         * freeBlocks.get(bestIndex).remove(removeIndex);
-         **/
+        int bestIndex = findBestIndex(size) - 1;
+
         
-        int result = findNextHighest(bestIndex);
-        System.out.println(result);
-        /**
-        if (freeBlocks.get(bestIndex).size() > 0) {
-
-            int removeIndex = freeBlocks.get(bestIndex).size() - 1;
-
-            freeBlocks.get(bestIndex).remove(removeIndex);
-
-        }
-        else {
-
+        int nextHighest = findNextHighest(bestIndex);
+        System.out.println(nextHighest);
+        
+        while (nextHighest != bestIndex) {
             
-            while (nextHighest != bestIndex + 1) {
-                // System.out.println(nextHighest);
-                split(nextHighest);
-                nextHighest = nextHighest - 1;
-                int removeIndex = freeBlocks.get(nextHighest).size() - 1;
+            split(nextHighest);
+            nextHighest--;
+        }
+        
+        
 
-                freeBlocks.remove(removeIndex);
+    }
+    
+    private void split(int index) {
 
-            }
+        int currIndex = index;
+        int lowerIndex = index - 1;
 
-        }**/
+        int firstIndex = freeBlocks.get(lowerIndex).size() - 1;
+        int secondIndex = freeBlocks.get(lowerIndex).size();
+
+        int removeIndex = freeBlocks.get(currIndex).size() - 1;
+
+        // remove the last block off of the index
+        freeBlocks.get(currIndex).remove(removeIndex);
+
+        // create two blocks of index i-1
+        FreeBlock firstSplit = new FreeBlock(lowerIndex + firstIndex, 2
+            ^ (lowerIndex));
+        FreeBlock secondSplit = new FreeBlock(lowerIndex + secondIndex, 2
+            ^ (lowerIndex));
+
+        // add the two blocks to the lower index i -1
+        freeBlocks.get(lowerIndex).add(firstSplit);
+        freeBlocks.get(lowerIndex).add(secondSplit);
 
     }
 
 
     // finds the next highest index that isn't null
     private int findNextHighest(int best) {
-        int nextHighest = best - 1;
+        int nextHighest = best;
         for (int x = nextHighest; x < freeBlocks.size(); x++) {
             //System.out.println("X IS "+x+" SIZE IS "+freeBlocks.get(x).size()+"");
             if (freeBlocks.get(x).size() > 0) {
@@ -127,7 +126,6 @@ public class FreeBlockList {
 
         double x = Math.log10(size) / Math.log10(2);
         int index = (int) x;
-        System.out.println("this is size " + size + "this is index " + index);
         return index;
     }
 
@@ -172,33 +170,6 @@ public class FreeBlockList {
     private void findAndAllocateBestFitBlock(int best, int start) {
 
     }
-
-
-    private void split(int index) {
-
-        int currIndex = index - 1;
-        int lowerIndex = index - 2;
-
-        int firstIndex = freeBlocks.get(lowerIndex).size() - 1;
-        int secondIndex = freeBlocks.get(lowerIndex).size();
-
-        int removeIndex = freeBlocks.get(currIndex).size() - 1;
-
-        // remove the last block off of the index
-        freeBlocks.get(currIndex).remove(removeIndex);
-
-        // create two blocks of index i-1
-        FreeBlock firstSplit = new FreeBlock(lowerIndex + firstIndex, 2
-            ^ (lowerIndex));
-        FreeBlock secondSplit = new FreeBlock(lowerIndex + secondIndex, 2
-            ^ (lowerIndex));
-
-        // add the two blocks to the lower index i -1
-        freeBlocks.get(lowerIndex).add(firstSplit);
-        freeBlocks.get(lowerIndex).add(secondSplit);
-
-    }
-
 
     // merges adjacent free blocks when possible
     public void mergeFreeBlocks(int j) {
