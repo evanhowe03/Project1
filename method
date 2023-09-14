@@ -1,0 +1,36 @@
+public void mergeFreeBlocks(int j) {
+		/**
+		 * for (int x = 0; x < freeBlocks.size(); x++) { if(freeBlocks.get(x).size()>1)
+		 * { for (int y = 0; y < freeBlocks.get(x).size(); y++) { int first = x + y; int
+		 * second = fr // freeBlocks.get(x).get(x).setPos();
+		 * freeBlocks.get(x).remove(y); } }
+		 * 
+		 * }
+		 **/
+		int i = j;
+		// continue until you reach the end of the freeBlocks list
+		if (i < freeBlocks.size()) {
+			// if there is more that 1 thing in the list
+			// there shouldn't ever be more than 1 thing in a linked list
+			if (freeBlocks.get(i).size() >= 2) {
+				// remove the two buddies
+				freeBlocks.get(i).remove(0);
+				freeBlocks.get(i).remove(1);
+
+				// calculate the index of new block inside the blicky list
+				int newBlicky = freeBlocks.get(i + 1).size() - 1;
+
+				// calculat ethe index of the new block within the freeBlocks list
+				int newIndex = i + 1;
+
+				// create a new block with the bigger index and size
+				FreeBlock newBlock = new FreeBlock(newIndex + newBlicky, 2 ^ i);
+				// add the block to the higher index
+				freeBlocks.get(newIndex).add(newBlock);
+			}
+			// increment i to the next linked list
+			// call mergeFreeBlocks on the next linked list
+			mergeFreeBlocks(i++);
+		}
+
+	}
