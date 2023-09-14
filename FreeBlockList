@@ -1,3 +1,4 @@
+
 /**
  * 
  */
@@ -8,98 +9,200 @@ import java.util.List;
  * 
  */
 public class FreeBlockList {
-    
-    private SinglyLinkedList<SinglyLinkedList> freeBlocks;
-    
-    
+    // FreeBlock help = new FreeBlock(0, 0);
+    // private FreeBlock loveSosa;
+    private SinglyLinkedList<SinglyLinkedList<FreeBlock>> freeBlocks;
+    private SinglyLinkedList<FreeBlock> blickyGotTheStiffy;
+
     public FreeBlockList(int size) {
-        
+
         double x = Math.log10(size) / Math.log10(2);
         int listSize = (int) x;
-        
-        this.freeBlocks = new SinglyLinkedList<SinglyLinkedList>();
-  
-        
-        //creates a list of singly linked lists
-        //got the singly linked list code from project 5 in 2114 
+
+
+        this.freeBlocks = new SinglyLinkedList<SinglyLinkedList<FreeBlock>>();
+
+        // creates a list of singly lsinked lists
+        // got the singly linked list code from project 5 in 2114
         for (int i = 0; i < listSize; i++) {
-            freeBlocks.add(i, new SinglyLinkedList<Handle>());
+            this.blickyGotTheStiffy = new SinglyLinkedList<FreeBlock>();
+            freeBlocks.add(i, blickyGotTheStiffy);
         }
-                                     
+        FreeBlock intializer = new FreeBlock(listSize, 2^listSize);
+        freeBlocks.get(listSize - 1).add(intializer);
     }
-    
-    //allocates freespace from the appropriate spot in the list
-    //based on the size of the byte of data
-    public Handle allocateBlock(int size) {
-        //find the starting position of the data in the freeBlockList
+
+
+    // allocates freespace from the appropriate spot in the list
+    // based on the size of the byte of data
+    public Handle createHandle(int size) {
+        // find the starting position of the data in the freeBlockList
         int startPos = findStartPos(size);
-        
-        //create the handle
+
+        int indexPos = findBestIndex(size);
+
+        // create the handle
         Handle newHandle = new Handle(startPos + findBestIndex(size), size);
-        
-        //allocate the free space from the freeBlockList
-       
-        
-        //return it to the memory manager
+
+        // return it to the memory manager
         return newHandle;
+
+    }
+    
+    public void addBlock(int size) {
+        
+     // allocate the free space from the freeBlockList
+        int bestIndex = findBestIndex(size);
+        findAndAllocateBestFitBlock(bestIndex);
+
+        // delete the allocated freeBlock
+        // delete the allocated freeBlock
+        int removeIndex = freeBlocks.get(bestIndex).size();
+        if (freeBlocks.get(bestIndex).size() > 1) {
+            removeIndex = removeIndex - 1;  
+        }
+  
+        freeBlocks.get(bestIndex).remove(removeIndex);
         
     }
     
+
     private int findStartPos(int size) {
-        //find the corresponding index
+        // find the corresponding index
         int index = findBestIndex(size);
-        
-        //find how big the specific linkedlist is
+
+        // find how big the specific linkedlist is
         int count = freeBlocks.get(index).size();
-    
-        //calculate the start position by multipling the index of the
-        //data by how much data is in the list
+
+        // calculate the start position by multipling the index of the
+        // data by how much data is in the list
         return index * count;
     }
-    
-    //adds free space back into the appropriate spot
-    public void releaseBlock(Handle memHandle) {
-        
-        int size = memHandle.getLength();
-        
-        //extract the starting position from the handle
-        int index = findBestIndex(size);
-        int startPos = findStartPos(size);
-  
-        //go to the right spot in freeBlocks
-        //add the block of data
 
-        
-    }
-    
-    //finds the smallest power of 2 that is greater than or equal to size
+
+    // finds the smallest power of 2 that is greater than or equal to size
     private int findBestIndex(int size) {
-        
+
         double x = Math.log10(size) / Math.log10(2);
-        int index = (int) x;
-        
+        int index = (int)x;
+
         return index;
     }
-    
-    //Finds and allocates a block with the specified size. 
-    //If an exact match is not found, it tries to split a larger block
-    private Byte findAndAllocateBestFitBlock(int size, int allSize) {
 
-        
+
+    // adds free space back into the appropriate spot
+    public void releaseBlock(Handle memHandle) {
+
+        int size = memHandle.getLength();
+
+        // extract the starting position from the handle
+        int index = findBestIndex(size);
+        int startPos = findStartPos(size);
+
+        // go to the right spot in freeBlocks
+        // add the block of data
+        FreeBlock block = new FreeBlock(memHandle.getStart(), memHandle.getLength());
+        freeBlocks.get(index).add(startPos, block);;
+
     }
-    
-    //merges adjacent free blocks when possible
-    public void mergeFreeBlocks() {
-        
+
+
+    /**
+     * 
+     * //this function doe sthe same thing as findBestIndex
+     * private int getSizeIndex(int size) {
+     * 
+     * int index = 0;
+     * while (size > 1) {
+     * size = size >> 2;
+     * index++;
+     * }
+     * 
+     * return index;
+     * 
+     * }
+     **/
+
+    // Finds and allocates a block with the specified size.
+    // If an exact match is not found, it tries to split a larger block
+    private void findAndAllocateBestFitBlock(int best) {
+
+        int bestIndex = best;
+        System.out.print(bestIndex);
+
+        SinglyLinkedList temp = freeBlocks.get(bestIndex);
+
+        if (temp.size() > 0) {
+            int lastIndex = temp.size() - 1;
+            int lowerIndex = bestIndex - 1;
+
+            int firstIndex = freeBlocks.get(lowerIndex).size() - 1;
+            int secondIndex = freeBlocks.get(lowerIndex).size();
+
+            // remove the last block off of index i
+            freeBlocks.get(bestIndex).remove(lastIndex);
+
+            // create two blocks of index i-1
+            FreeBlock firstSplit = new FreeBlock(lowerIndex + firstIndex, 2
+                ^ (lowerIndex));
+            FreeBlock secondSplit = new FreeBlock(lowerIndex + secondIndex, 2
+                ^ (lowerIndex));
+
+            // add the two blocks to the lower index i -1
+            freeBlocks.get(lowerIndex).add(firstSplit);
+            freeBlocks.get(lowerIndex).add(secondSplit);
+        }
+        else if (temp.size() == 0){
+            findAndAllocateBestFitBlock(bestIndex++);
+        }
+
     }
-    
+
+
+    // merges adjacent free blocks when possible
+    public void mergeFreeBlocks(int j) {
+
+        int i = j;
+        // continue until you reach the end of the freeBlocks list
+        if (i < freeBlocks.size()) {
+            // if there is more that 1 thing in the list
+            // there shouldn't ever be more than 1 thing in a linked list
+            if (freeBlocks.get(i).size() >= 2) {
+                // remove the two buddies
+                freeBlocks.get(i).remove(0);
+                freeBlocks.get(i).remove(1);
+
+                // calculate the index of new block inside the blicky list
+                int newBlicky = freeBlocks.get(i + 1).size() - 1;
+
+                // calculat ethe index of the new block within the freeBlocks
+                // list
+                int newIndex = i + 1;
+
+                // create a new block with the bigger index and size
+                FreeBlock newBlock = new FreeBlock(newIndex + newBlicky, 2^i);
+                // add the block to the higher index
+                freeBlocks.get(newIndex).add(newBlock);
+            }
+            // increment i to the next linked list
+            // call mergeFreeBlocks on the next linked list
+            mergeFreeBlocks(i++);
+        }
+
+    }
+
+
     public void dump() {
         
+        for (int i = 0; i < freeBlocks.size(); i++) {
+            int indexSize = 2^i;
+            System.out.println(indexSize + ": ");
+            
+            for (int j = 0; j < freeBlocks.get(i).size(); j++) {
+                System.out.print(j + "");
+            }
+        }
+
     }
-    
-    
-    
-    
-    
 
 }
