@@ -201,7 +201,7 @@ public void dump() {
 				int power = (int) Math.pow(2, x + 1);
 				System.out.print(power + ": ");
 				for (int y = 0; y < freeBlocks.get(x).size(); y++) {
-					System.out.print("" + freeBlocks.get(x).get(y).getSize() + "");
+					System.out.print("" + freeBlocks.get(x).get(y).getSize() + " ");
 
 				}
 				System.out.println("");
