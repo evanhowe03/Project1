@@ -24,11 +24,16 @@ public class SemDB {
         //call the insert methods for memManager and hashtable
         byte[] x = sem.serialize();
         
-        Handle identifier = mem.insert(x, x.length);
+        Handle identifier = mem.getHandle(x, x.length);
+        
+        
+        boolean result = table.insert(id, sem, identifier);
+        if (result == true) {
             
-        table.insert(id, sem, identifier);
-        
-        
+            mem.insert(x, x.length);
+            
+        }
+ 
     }
     
     public void remove(int key) {
