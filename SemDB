@@ -41,8 +41,10 @@ public class SemDB {
         //retrieve the handle associated with the key
         Handle thisHandle = table.returnHandle(key);
         
-        table.delete(key);
-        mem.remove(thisHandle);
+        boolean result = table.delete(key);
+        if (result == true) {
+            mem.remove(thisHandle);
+        }
         
     }
     
@@ -54,7 +56,11 @@ public class SemDB {
     
     public void print(String text) {
         
-        table.print(text);
+        boolean result = table.print(text);
+        
+        if (result == true) {
+            mem.dump();
+        }
         
     }
 
