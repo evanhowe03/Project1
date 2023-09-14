@@ -167,36 +167,44 @@ public class HashTable<K, V> {
 		return -1; // key not found
 	}
 
-	 public boolean print(String printmythingy) {
-	        if (printmythingy.equalsIgnoreCase("hashtable")) {
-	            System.out.println("Hashtable:");
-	            for (int x = 0; x < hashSize; x++) {
-	                if (table[x] != null) {
-	                    // change to use id not hash value
-	                    // System.out.print("\n" + table[x].key + ": " + x + "");
-	                    // System.out.println(table[x].tomb);
-	                    if (table[x].tomb) {
-	                        System.out.println("" + x + ": " + "TOMBSTONE");
-	                    }
-	                    else {
+	public boolean print(String printmythingy) {
+		if (printmythingy.equalsIgnoreCase("hashtable")) {
+			System.out.println("Hashtable:");
+			for (int x = 0; x < hashSize; x++) {
+				if (table[x] != null) {
+					// change to use id not hash value
+					// System.out.print("\n" + table[x].key + ": " + x + "");
+					// System.out.println(table[x].tomb);
+					if (table[x].tomb) {
+						System.out.println("" + x + ": " + "TOMBSTONE");
+					} else {
 
-	                        System.out.println("" + x + ": " + table[x].key + "");
+						System.out.println("" + x + ": " + table[x].key + "");
 
-	                    }
+					}
 
-	                }
-	            }
-	            
-	            System.out.println("total records: " + size);
-	        }
+				}
+			}
 
-	        if (printmythingy.equalsIgnoreCase("blocks")) {
-	            System.out.println("FreeBlockList:");
-	            return true;
-	        }
+			System.out.println("total records: " + size);
+		}
 
-	        return false;
+		if (printmythingy.equalsIgnoreCase("blocks")) {
+			System.out.println("FreeBlockList:");
+			return true;
+		}
 
-	    }
+		return false;
+
+	}
+
+	public Handle returnHandle(int key) {
+		int index = findIndex(key);
+		if (index == -1) {
+			return null;
+		} else {
+			return (table[index].hand);
+		}
+	}
 
 }
