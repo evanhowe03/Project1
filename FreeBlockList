@@ -158,8 +158,9 @@ public class FreeBlockList {
                 
                 //System.out.print("This is the size of the list:" + freeBlocks.get(i).size());
                 // remove the two buddies
-                freeBlocks.get(i).remove(0);
-                freeBlocks.get(i).remove(1);
+                int lastIndex = freeBlocks.get(i).size() - 1;
+                freeBlocks.get(i).remove(lastIndex);
+                freeBlocks.get(i).remove(lastIndex - 1);
                 
                 int newIndex = i + 1;
                 int newArrayIndex = freeBlocks.get(i + 1).size();
