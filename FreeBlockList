@@ -136,34 +136,16 @@ public class FreeBlockList {
         int size = memHandle.getLength();
 
         // extract the starting position from the handle
-        int index = findBestIndex(size);
-        int startPos = findStartPos(size);
+        int index = findBestIndex(size) - 1;
+        int startPos = findStartPos(size) - 1;
 
         // go to the right spot in freeBlocks
         // add the block of data
-        FreeBlock block = new FreeBlock(memHandle.getStart(), memHandle
-            .getLength());
-        freeBlocks.get(index).add(startPos, block);
-        ;
+        FreeBlock block = new FreeBlock(memHandle.getStart(), memHandle.getLength());
+        freeBlocks.get(index).add(block);
+        
 
     }
-
-
-    /**
-     * 
-     * //this function doe sthe same thing as findBestIndex
-     * private int getSizeIndex(int size) {
-     * 
-     * int index = 0;
-     * while (size > 1) {
-     * size = size >> 2;
-     * index++;
-     * }
-     * 
-     * return index;
-     * 
-     * }
-     **/
 
     // Finds and allocates a block with the specified size.
     // If an exact match is not found, it tries to split a larger block
