@@ -1,63 +1,217 @@
-/**
- * 
- */
 
 /**
  * 
  */
-public class SemDB {
-    
-    private HashTable table;
-    private MemoryManager mem;
-    
-    public SemDB(int initialMemorySize, int initialHashSize) {
-        
-        int memSize = initialMemorySize;
-        int hashSize = initialHashSize;
-        
-        table = new HashTable(hashSize);
-        mem = new MemoryManager(memSize);
-   
+
+import java.util.List;
+
+/**
+ * 
+ */
+public class FreeBlockList {
+    // FreeBlock help = new FreeBlock(0, 0);
+    // private FreeBlock loveSosa;
+    private SinglyLinkedList<SinglyLinkedList<FreeBlock>> freeBlocks;
+    private SinglyLinkedList<FreeBlock> blickyGotTheStiffy;
+
+    public FreeBlockList(int size) {
+
+        double x = Math.log10(size) / Math.log10(2);
+        int listSize = (int)x;
+
+        this.freeBlocks = new SinglyLinkedList<SinglyLinkedList<FreeBlock>>();
+
+        // creates a list of singly lsinked lists
+        // got the singly linked list code from project 5 in 2114
+        for (int i = 0; i < listSize; i++) {
+            this.blickyGotTheStiffy = new SinglyLinkedList<FreeBlock>();
+            freeBlocks.add(i, blickyGotTheStiffy);
+        }
+        FreeBlock intializer = new FreeBlock(listSize, (int) Math.pow(2, listSize));
+        freeBlocks.get(listSize - 1).add(intializer);
+
+    }
+
+
+    // allocates freespace from the appropriate spot in the list
+    // based on the size of the byte of data
+    public Handle createHandle(int size) {
+        // find the starting position of the data in the freeBlockList
+        int startPos = findStartPos(size);
+
+        int indexPos = findBestIndex(size);
+
+        // create the handle
+        Handle newHandle = new Handle(startPos + findBestIndex(size), size);
+
+        // return it to the memory manager
+        return newHandle;
+
     }
     
-    public void add(int id, Seminar sem) throws Exception {
-        //call the insert methods for memManager and hashtable
-        byte[] x = sem.serialize();
+    
+
+    public void addBlock(int size) {
+
+        int bestIndex = findBestIndex(size) - 1;
+
         
-        Handle identifier = mem.getHandle(x, x.length);
+        int nextHighest = findNextHighest(bestIndex);
         
-        
-        boolean result = table.insert(id, sem, identifier);
-        if (result == true) {
+        while (nextHighest != bestIndex) {
             
-            mem.insert(x, x.length);
+            split(nextHighest);
+            nextHighest--;
+        }
+        
+        
+
+    }
+    
+    private void split(int index) {
+
+        int currIndex = index;
+        int lowerIndex = index - 1;
+
+        int firstIndex = freeBlocks.get(lowerIndex).size() - 1;
+        int secondIndex = freeBlocks.get(lowerIndex).size();
+
+        int removeIndex = freeBlocks.get(currIndex).size() - 1;
+
+        // remove the last block off of the index
+        freeBlocks.get(currIndex).remove(removeIndex);
+        
+        int newSize = (int) Math.pow(2, lowerIndex);
+      
+        // create two blocks of index i-1
+        FreeBlock firstSplit = new FreeBlock(lowerIndex + firstIndex, newSize);
+        FreeBlock secondSplit = new FreeBlock(lowerIndex + secondIndex, newSize);
+
+        // add the two blocks to the lower index i -1
+        freeBlocks.get(lowerIndex).add(firstSplit);
+        freeBlocks.get(lowerIndex).add(secondSplit);
+
+    }
+
+
+    // finds the next highest index that isn't null
+    private int findNextHighest(int best) {
+        int nextHighest = best;
+        for (int x = nextHighest; x < freeBlocks.size(); x++) {
+            //System.out.println("X IS "+x+" SIZE IS "+freeBlocks.get(x).size()+"");
+            if (freeBlocks.get(x).size() > 0) {
+               
+                return x;
+            }
+        }
+        return nextHighest;
+    }
+
+
+    private int findStartPos(int size) {
+        // find the corresponding index
+        int index = findBestIndex(size);
+
+        // find how big the specific linkedlist is
+        int count = freeBlocks.get(index).size();
+
+        // calculate the start position by multipling the index of the
+        // data by how much data is in the list
+        return index * count;
+    }
+
+
+    // finds the smallest power of 2 that is greater than or equal to size
+    private int findBestIndex(int size) {
+
+        double x = Math.log10(size) / Math.log10(2);
+        int index = (int) x;
+        return index;
+    }
+
+
+    // adds free space back into the appropriate spot
+    public void releaseBlock(Handle memHandle) {
+
+        int size = memHandle.getLength();
+
+        // extract the starting position from the handle
+        int index = findBestIndex(size) - 1;
+        int startPos = findStartPos(size) - 1;
+
+        // go to the right spot in freeBlocks
+        // add the block of data
+        FreeBlock block = new FreeBlock(memHandle.getStart(), memHandle.getLength());
+        freeBlocks.get(index).add(block);
+        
+
+    }
+
+    // merges adjacent free blocks when possible
+    public void mergeFreeBlocks() {
+        
+        // continue until you reach the end of the freeBlocks list
+        for (int i = 0; i < freeBlocks.size(); i++) {
+            // if there is more that 1 thing in the list
+            // there shouldn't ever be more than 1 thing in a linked list
+            if (freeBlocks.get(i).size() >= 2) {
+                
+                //System.out.print("This is the size of the list:" + freeBlocks.get(i).size());
+                // remove the two buddies
+                int lastIndex = freeBlocks.get(i).size() - 1;
+                freeBlocks.get(i).remove(lastIndex);
+                freeBlocks.get(i).remove(lastIndex - 1);
+                
+                int newIndex = i + 1;
+                int newArrayIndex = freeBlocks.get(i + 1).size();
+                
+                // create a new block with the bigger index and size
+                FreeBlock biggerBlock = new FreeBlock(newIndex + newArrayIndex, (int) Math.pow(2, newIndex));
+                
+                freeBlocks.get(newIndex).add(biggerBlock);
+            }
             
         }
- 
+
     }
     
-    public void remove(int key) {
+    private boolean isEmpty() {
         
-        //retrieve the handle associated with the key
-        Handle thisHandle = table.returnHandle(key);
+        int count = 0;
         
-        boolean result = table.delete(key);
-        if (result == true) {
-            mem.remove(thisHandle);
+        for (int i = 0; i < freeBlocks.size(); i++) {
+            if (freeBlocks.get(i).isEmpty()) {
+                count++;
+            }
         }
         
+        if (count == freeBlocks.size()) {
+            return true;
+        }
+        
+        return false;
+        
     }
-    
-    public void search(int key) {
+
+
+    public void dump() {
         
-        table.search(key);
+     
+        for (int i = 0; i < freeBlocks.size(); i++) {
+            if (freeBlocks.get(i).size() > 0) {
+                
+                int indexSize = (int) Math.pow(2, i);
+                
+                System.out.println(indexSize + ": ");
+                
+            }          
+            
+        }
         
-    }
-    
-    public void print(String text) {
-        
-        table.print(text);
-        
+        if (isEmpty()) {
+            System.out.println("There are no freeblocks in the memory pool");   
+        }
+
     }
 
 }
