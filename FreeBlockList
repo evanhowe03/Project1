@@ -147,12 +147,6 @@ public class FreeBlockList {
 
     }
 
-    // Finds and allocates a block with the specified size.
-    // If an exact match is not found, it tries to split a larger block
-    private void findAndAllocateBestFitBlock(int best, int start) {
-
-    }
-
     // merges adjacent free blocks when possible
     public void mergeFreeBlocks(int j) {
 
@@ -180,7 +174,7 @@ public class FreeBlockList {
             }
             // increment i to the next linked list
             // call mergeFreeBlocks on the next linked list
-            mergeFreeBlocks(i++);
+            mergeFreeBlocks(i + 1);
         }
 
     }
