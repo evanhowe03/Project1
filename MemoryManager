@@ -7,30 +7,69 @@
  */
 public class MemoryManager {
     
+    //taken bkocks
     private byte[] memoryPool;
+    private int size;
+    private int totalBites;
+    
+    //free blocks an array of linked lists
     private FreeBlockList freeBlockList;
     
     // Constructor. poolsize defines the size of the memory pool in bytes
     public MemoryManager(int poolSize) {
         
+        totalBites = poolSize;
+ 
         this.memoryPool = new byte[poolSize];
         this.freeBlockList = new FreeBlockList(poolSize);
+        this.size = poolSize;
     }
     
     // Insert a record and return its position handle.
     // space contains the record to be inserted, of length size.
-    public Handle insert(byte[] space, int size) {
+    public void insert(byte[] space, int size) {
+        
+        Handle member = freeBlockList.createHandle(size);
         
         //get handle &
         //remove the space from the freeBlockList
-        Handle member = freeBlockList.allocateBlock(size);
+        freeBlockList.addBlock(size);
         
         //add the byte version of the size in the memoryPool
         memoryPool[member.getStart()] = (byte)size;
-       
-        //return the handle (to the database)
-        return member;
+        
+        //calculate bytes added
+        if (totalBites - size <= 0) {
+            expandMemory();
+        } else {
+            totalBites = totalBites - size;
+        }
 
+
+    }
+    
+    public Handle getHandle(byte[]space, int size) {
+        
+        Handle member = freeBlockList.createHandle(size);
+        
+      //return the handle (to the database)
+        return member;
+        
+        
+    }
+    
+    private void expandMemory() {
+        
+        byte[] newPool = new byte[size * 2];
+        
+        for (int i = 0; i < size; i++) {
+            newPool[i] = memoryPool[i];
+        }
+        
+        this.size = (size * 2);
+        
+        this.memoryPool = newPool;
+           
     }
     
     // Return the length of the record associated with theHandle
@@ -51,8 +90,11 @@ public class MemoryManager {
         //add a block of appropriate size to FBL
         freeBlockList.releaseBlock(theHandle);
         
-        //merge free blokcs
-        freeBlockList.mergeFreeBlocks();
+        //merge free blocks
+        freeBlockList.mergeFreeBlocks(0);
+        
+        //add back to the totalBytes
+        totalBites += theHandle.getLength();
     }
     
     // Return the record with handle posHandle, up to size bytes, by
@@ -73,6 +115,8 @@ public class MemoryManager {
     
     // Dump a printout of the freeblock list
     public void dump() {
+        
+        freeBlockList.dump();
         
     }
     
