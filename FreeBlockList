@@ -193,25 +193,26 @@ public class FreeBlockList {
         
     }
 
+public void dump() {
 
-    public void dump() {
-        
-     
-        for (int i = 0; i < freeBlocks.size(); i++) {
-            if (freeBlocks.get(i).size() > 0) {
-                
-                int indexSize = (int) Math.pow(2, i);
-                
-                System.out.println(indexSize + ": ");
-                
-            }          
-            
-        }
-        
-        if (isEmpty()) {
-            System.out.println("There are no freeblocks in the memory pool");   
-        }
+		for (int x = 0; x < freeBlocks.size(); x++) {
 
-    }
+			if (freeBlocks.get(x).size() > 0) {
+				int power = (int) Math.pow(2, x + 1);
+				System.out.println("" + power + ": ");
+				for (int y = 0; y < freeBlocks.get(x).size(); y++) {
+					System.out.print("" + freeBlocks.get(x).get(y).getSize() + " ");
+				}
+
+			}
+
+		}
+
+		if (isEmpty()) {
+			System.out.println("There are no freeblocks in the memory pool");
+		}
+
+	}
+
 
 }
