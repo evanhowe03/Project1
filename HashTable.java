@@ -1,14 +1,22 @@
 import java.io.*;
 
 /**
- * 
+ * @author Pallavi Chavan pallucha21 and Evan Howe evanhowe03
+ * @param <K> this is the key
+ * @param <V> this is the value 
+ * @version 09/14/23
  */
 public class HashTable<K, V> {
-
     private int hashSize;
     private int size;
     private Entry[] table;
-
+    
+    /*
+     * HashTable constructor
+     * 
+     * @param initialHashSize this is the size
+     * of the hash table
+     */
     public HashTable(int initialHashSize) {
 
         hashSize = initialHashSize;
@@ -18,33 +26,57 @@ public class HashTable<K, V> {
 
     }
 
-
+    /*
+     * return the size of the hash
+     * table
+     */
     public int getHashSize() {
         return hashSize;
     }
 
-
+    /*
+     * calculate the first
+     * hashing value
+     * 
+     * @param key this is the key
+     */
     public int firstHashValue(int key) {
-
-        int M = hashSize;
-        return key % M;
+        //the hashSize
+        int m = hashSize;
+        return key % m;
     }
 
-
+    /*
+     * calculate the second
+     * hashing value
+     * 
+     * @param key this is the key
+     */
     public int secondHashValue(int key) {
-
-        int M = hashSize;
+        //the hashSize
+        int m = hashSize;
         // System.out.print((((key/M) % (M/2)) * 2) + 1);
-        return (((key / M) % (M / 2)) * 2) + 1;
+        return (((key / m) % (m / 2)) * 2) + 1;
     }
 
 
+    /**
+     * this doubles the hashtable 
+     * by creating an empty hashtable that's
+     * double the initial size
+     * and rehashing all of the old
+     * values of the old table into 
+     * the new one
+     */
     private void doubleTable() {
-
+        //the size of the hashTable now
         int oldSize = hashSize;
+        //a copy of the table now
         Entry[] oldTable = table;
 
         hashSize = hashSize * 2;
+        //the now hashtable 
+        //has double the capacity
         table = new Entry[hashSize];
 
         // Rehash all existing entries into the new table
@@ -71,25 +103,36 @@ public class HashTable<K, V> {
     }
 
 
+    /**
+     * 
+     * @param key this represents the key value
+     * @param value this the seminar
+     * @param hand this is the associated handle 
+     *          that you'll use in the memManager
+     * @return  a boolean that represents if the 
+     *          insertion was succesful
+     * @throws Exception
+     */
     public boolean insert(int key, Seminar value, Handle hand)
         throws Exception {
 
-        // System.out.println("SIZE: "+size+" HASHZISE: "+hashSize+"");
         // doubles the table if the table is more than %50 full
         if (size >= (hashSize / 2)) {
             doubleTable();
             System.out.println("Hash Table expanded to " + hashSize
                 + " records");
-            // System.out.print("I doubled the table");
         }
-
+        
+        //creating hashing values based on key
         int hashing1 = firstHashValue(key);
         int hashing2 = secondHashValue(key);
         int i = 0;
-
+        
+        //go through the hash table
         while (table[hashing1] != null && i < hashSize) {
-
-            if (table[hashing1].value == null && table[hashing1].tomb == true) {
+            //if there is a tombstone overwrite it
+            if (table[hashing1].value == null && 
+                table[hashing1].tomb == true) {
 
                 if (table[hashing1].tomb) {
                     table[hashing1].key = key;
@@ -98,7 +141,7 @@ public class HashTable<K, V> {
                     break;
 
                 }
-            }
+            }//if there is a record there report a collision
             else if (table[hashing1].key == key) {
                 System.out.println(
                     "Insert FAILED - There is already a record with ID " + key
@@ -108,16 +151,18 @@ public class HashTable<K, V> {
             hashing1 = (hashing1 + hashing2) % table.length;
             i++;
         }
-        // table[hashing1].key = key;
+        //assign the spot in the hashtable to the new entry
         table[hashing1] = new Entry(key, value, false, hand);
-        // table[hashing1].tomb = false;
+        
         size++;
 
         System.out.println("Successfully inserted record with ID " + key + "");
         System.out.println(table[hashing1].value.toString());
-
+        
+        //find the serialized byte[x] of seminar
         byte[] x = table[hashing1].value.serialize();
-
+        
+        //print the size of seminar
         System.out.println("Size: " + x.length + "");
         return true;
 
@@ -126,36 +171,27 @@ public class HashTable<K, V> {
         // System.out.println("Hash Table Expanded to records");
 
     }
-    /*
-     * 
-     * public void printTable() {
-     * 
-     * // System.out.println("\nHash Table");
-     * 
-     * for (int i = 0; i < size; i++) { if (table[i] != null) {
-     * System.out.println(table[i].key + " " + table[i].value.toString()); } }
-     * 
-     * }
+
+    /**
+     * Deletes a seminar from the hashtable
+     * @param key this the key value
+     * @return whether the deletion
+     *          was successful or not
      */
-
-
     public boolean delete(int key) {
-        // System.out.println("HAHAHA");
+        //retreive the hashtable index
         int index = findIndex(key);
-        // System.out.println(table[index].key + "" +
-        // table[index].value.toString());
-
+        
+        //if the record doesn't exist
         if (index == -1) {
 
-            System.out.println("Delete FAILED -- There is no record with ID "
+            System.out.println("Delete FAILED -- "
+                + "There is no record with ID "
                 + key);
             return false;
 
-        }
+        } //if there is a record with that key
         else if (table[index].key == key) {
-
-            // table[index].key = -10;
-            // table[index] = null;
 
             table[index].tomb = true;
             size--;
@@ -168,7 +204,13 @@ public class HashTable<K, V> {
 
     }
 
-
+    /**
+     * searches for the seminar 
+     * by it's key
+     * @param key this is the 
+     *          key you're
+     *          searching for
+     */
     public void search(int key) {
 
         int index = findIndex(key);
@@ -193,7 +235,11 @@ public class HashTable<K, V> {
         }
     }
 
-
+    /**
+     * Returns the seminar by it's key
+     * @param key this the key you're looking for
+     * @return the Seminar associate with the key
+     */
     public Seminar searchAndReturn(int key) {
 
         int index = findIndex(key);
@@ -203,11 +249,17 @@ public class HashTable<K, V> {
         else {
             return (table[index].value);
         }
-
+      
     }
 
-
+    /**
+     * 
+     * @param key
+     * @return the handle
+     *          for the seminar
+     */
     public Handle returnHandle(int key) {
+        //retrieve the hashing index
         int index = findIndex(key);
         if (index == -1) {
             return null;
@@ -217,13 +269,19 @@ public class HashTable<K, V> {
         }
     }
 
-
+    /**
+     * Find the hashing index for
+     * the key
+     * @param key
+     * @return the hashing index
+     */
     public int findIndex(int key) {
-
+        //first hashing value
         int hashing1 = firstHashValue(key);
+        //second hashing value
         int hashing2 = secondHashValue(key);
         int i = 0;
-
+        
         while (table[hashing1] != null && i < hashSize) {
 
             if (table[hashing1].key == key) {
@@ -238,15 +296,20 @@ public class HashTable<K, V> {
 
     }
 
-
+    /**
+     * 
+     * @param printmythingy 
+     * take in the string
+     * "hashtable" or "blocks"
+     * @return whether it was requested to 
+     * print blocks or hashtable
+     */
     public boolean print(String printmythingy) {
         if (printmythingy.equalsIgnoreCase("hashtable")) {
             System.out.println("Hashtable:");
             for (int x = 0; x < hashSize; x++) {
                 if (table[x] != null) {
-                    // change to use id not hash value
-                    // System.out.print("\n" + table[x].key + ": " + x + "");
-                    // System.out.println(table[x].tomb);
+               
                     if (table[x].tomb) {
                         System.out.println("" + x + ": " + "TOMBSTONE");
                     }
