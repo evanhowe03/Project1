@@ -1,191 +1,278 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.Scanner;
 import org.junit.Test;
 
 import student.TestCase;
 
 /**
- * @author {Your Name Here}
- * @version {Put Something Here}
+ * 
+ * This class tests semManager
+ * 
+ * @author Pallavi Chavan pallucha21 and
+ * @author Evan Howe evanhowe03
+ * @version 09/14/23
  */
 public class SemManagerTest extends TestCase {
-	/**
-	 * Sets up the tests that follow. In general, used for initialization
-	 */
-	public void setUp() {
-		// Nothing here
-	}
+    /**
+     * Sets up the tests that follow. In general, used for initialization
+     */
+    public void setUp() {
+        // Nothing here
+    }
 
-	/**
-	 * Get code coverage of the class declaration.
-	 */
-	public void testMInitx() {
-		SemManager sem = new SemManager();
-		// SemManager nullSem = null;
-		// assertNull(nullSem);
-		assertNotNull(sem);
-		// SemManager.main(null);
-	}
 
-	@Test
-	public void testScanner() {
-		String testInput = "word1 word2 word3";
-		Scanner scanner = new Scanner(testInput);
+    /**
+     * Get code coverage of the class declaration.
+     */
+    public void testMInitx() {
+        SemManager sem = new SemManager();
 
-		assertTrue(scanner.hasNext());
-		assertEquals("word1", scanner.next());
-		assertTrue(scanner.hasNext());
-		assertEquals("word2", scanner.next());
-		assertTrue(scanner.hasNext());
-		assertEquals("word3", scanner.next());
+        assertNotNull(sem);
 
-		assertFalse(scanner.hasNext());
+    }
 
-	}
 
-	public void testWords() {
-		String test = "insert search delete print";
+    /**
+     * tests that scanner parses correctly
+     * 
+     * @Test
+     */
+    public void testScanner() {
+        String testInput = "word1 word2 word3";
+        Scanner scanner = new Scanner(testInput);
 
-		Scanner scanner = new Scanner(test);
+        assertTrue(scanner.hasNext());
+        assertEquals("word1", scanner.next());
+        assertTrue(scanner.hasNext());
+        assertEquals("word2", scanner.next());
+        assertTrue(scanner.hasNext());
+        assertEquals("word3", scanner.next());
 
-		assertTrue(scanner.hasNext());
-		assertEquals("insert", scanner.next());
-		assertEquals("search", scanner.next());
-		assertEquals("delete", scanner.next());
-		assertEquals("print", scanner.next());
+        assertFalse(scanner.hasNext());
 
-	}
+    }
 
-	public void testMain() throws NumberFormatException, Exception {
 
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
-		args[2] = "P1Sample_input.txt";
-		// SemManager sem = new SemManager();
-		SemManager.main(args);
-		String output = systemOut().getHistory();
-		String referenceOutput = readFile("editedoutput.txt");
-		// assertFuzzyEquals(referenceOutput, output);
-		assertFuzzyEquals(referenceOutput, output);
+    /**
+     * @Test
+     *       tests that scanner parses
+     *       the commands
+     */
+    public void testWords() {
+        String test = "insert search delete print";
 
-		assertNotNull(sem);
-	}
+        Scanner scanner = new Scanner(test);
 
-	public void testMain2() throws NumberFormatException, Exception {
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
-		args[2] = "P1Sample_input.txt";
+        assertTrue(scanner.hasNext());
+        assertEquals("insert", scanner.next());
+        assertEquals("search", scanner.next());
+        assertEquals("delete", scanner.next());
+        assertEquals("print", scanner.next());
 
-		SemManager.main(args);
-		String output = systemOut().getHistory();
+    }
 
-		String referenceOutput = readFile("P1Sample_output.txt");
-		// assertFuzzyEquals(referenceOutput, output);
-		assertFuzzyEquals(referenceOutput, output);
 
-	}
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testMain() throws NumberFormatException, Exception {
 
-	public void testMain3() throws NumberFormatException, Exception {
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args = null;
-		SemManager.main(args);
-		String output = systemOut().getHistory();
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args[0] = "512";
+        args[1] = "4";
+        args[2] = "P1Sample_input.txt";
+        // SemManager sem = new SemManager();
+        SemManager.main(args);
+        String output = systemOut().getHistory();
+        String referenceOutput = readFile("editedoutput.txt");
+        // assertFuzzyEquals(referenceOutput, output);
+        assertFuzzyEquals(referenceOutput, output);
 
-		String referenceOutput = readFile("editedoutput.txt");
-		// assertFuzzyEquals(referenceOutput, output);
-		assertFuzzyEquals(referenceOutput, output);
+        assertNotNull(sem);
+    }
 
-	}
 
-	public void testTombstone() throws NumberFormatException, Exception {
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testMain2() throws NumberFormatException, Exception {
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args[0] = "512";
+        args[1] = "4";
+        args[2] = "P1Sample_input.txt";
 
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
-		args[2] = "tombstone.txt";
+        SemManager.main(args);
+        String output = systemOut().getHistory();
 
-		SemManager.main(args);
-		String output = systemOut().getHistory();
-		String referenceOutput = readFile("tombstoneOUT.txt");
-		assertFuzzyEquals(referenceOutput, output);
+        String referenceOutput = readFile("P1Sample_output.txt");
+        // assertFuzzyEquals(referenceOutput, output);
+        assertFuzzyEquals(referenceOutput, output);
 
-	}
+    }
 
-	public String readFile(String name) {
-		String fileFish = "";
-		try {
 
-			Scanner scan = new Scanner(new File(name));
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testMain3() throws NumberFormatException, Exception {
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args = null;
+        SemManager.main(args);
+        String output = systemOut().getHistory();
 
-			while (scan.hasNextLine()) {
-				fileFish += scan.nextLine() + "\n";
-			}
-			scan.close();
-		} catch (FileNotFoundException e) {
+        String referenceOutput = readFile("editedoutput.txt");
+        // assertFuzzyEquals(referenceOutput, output);
+        assertFuzzyEquals(referenceOutput, output);
 
-			e.printStackTrace();
-		}
+    }
 
-		return fileFish;
-	}
 
-	public void testGet() throws NumberFormatException, Exception {
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
-		args[2] = "memInput.txt";
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testTombstone() throws NumberFormatException, Exception {
 
-		SemManager.main(args);
-		String output = systemOut().getHistory();
-		assertFuzzyEquals("freeblocklist\r\n" + "512 512", output);
-	}
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args[0] = "512";
+        args[1] = "4";
+        args[2] = "tombstone.txt";
 
-	public void testGet2() throws NumberFormatException, Exception {
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
-		args[2] = "memInput2.txt";
+        SemManager.main(args);
+        String output = systemOut().getHistory();
+        String referenceOutput = readFile("tombstoneOUT.txt");
+        assertFuzzyEquals(referenceOutput, output);
 
-		SemManager.main(args);
-		String output = systemOut().getHistory();
-		String referenceOutput = readFile("mout.txt");
-		assertFuzzyEquals(referenceOutput, output);
-	}
+    }
 
-	public void testGet3() throws NumberFormatException, Exception {
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
-		args[2] = "help.txt";
 
-		SemManager.main(args);
-		String output = systemOut().getHistory();
-		String referenceOutput = readFile("m.txt");
-		assertFuzzyEquals(referenceOutput, output);
-	}
-	public void testGet4() throws NumberFormatException, Exception {
-		SemManager sem = new SemManager();
-		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
-		args[2] = "h.txt";
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @param name
+     * @return
+     */
+    public String readFile(String name) {
+        String fileFish = "";
+        try {
 
-		SemManager.main(args);
-		String output = systemOut().getHistory();
-		String referenceOutput = readFile("hout.txt");
-		assertFuzzyEquals(referenceOutput, output);
-	}
+            Scanner scan = new Scanner(new File(name));
+
+            while (scan.hasNextLine()) {
+                fileFish += scan.nextLine() + "\n";
+            }
+            scan.close();
+        }
+        catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+        }
+
+        return fileFish;
+    }
+
+
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testGet() throws NumberFormatException, Exception {
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args[0] = "512";
+        args[1] = "4";
+        args[2] = "memInput.txt";
+
+        SemManager.main(args);
+        String output = systemOut().getHistory();
+        assertFuzzyEquals("freeblocklist\r\n" + "512 512", output);
+    }
+
+
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testGet2() throws NumberFormatException, Exception {
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args[0] = "512";
+        args[1] = "4";
+        args[2] = "memInput2.txt";
+
+        SemManager.main(args);
+        String output = systemOut().getHistory();
+        String referenceOutput = readFile("mout.txt");
+        assertFuzzyEquals(referenceOutput, output);
+    }
+
+
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testGet3() throws NumberFormatException, Exception {
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args[0] = "512";
+        args[1] = "4";
+        args[2] = "help.txt";
+
+        SemManager.main(args);
+        String output = systemOut().getHistory();
+        String referenceOutput = readFile("m.txt");
+        assertFuzzyEquals(referenceOutput, output);
+    }
+
+
+    /**
+     * tests the main method
+     * 
+     * @Test
+     * @throws NumberFormatException
+     * @throws Exception
+     */
+    public void testGet4() throws NumberFormatException, Exception {
+        SemManager sem = new SemManager();
+        String[] args = new String[3];
+        args[0] = "512";
+        args[1] = "4";
+        args[2] = "h.txt";
+
+        SemManager.main(args);
+        String output = systemOut().getHistory();
+        String referenceOutput = readFile("hout.txt");
+        assertFuzzyEquals(referenceOutput, output);
+    }
 }
