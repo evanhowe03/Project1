@@ -79,7 +79,7 @@ public class SemManagerTest extends TestCase {
 
 	public void testMain2() throws NumberFormatException, Exception {
 		SemManager sem = new SemManager();
-		String[] args = new String[4];
+		String[] args = new String[3];
 		args[0] = "512";
 		args[1] = "4";
 		args[2] = "P1Sample_input.txt";
@@ -106,6 +106,21 @@ public class SemManagerTest extends TestCase {
 
 	}
 
+	public void testTombstone() throws NumberFormatException, Exception {
+
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "tombstone.txt";
+
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+		String referenceOutput = readFile("tombstoneOUT.txt");
+		assertFuzzyEquals(referenceOutput, output);
+
+	}
+
 	public String readFile(String name) {
 		String fileFish = "";
 		try {
@@ -122,5 +137,55 @@ public class SemManagerTest extends TestCase {
 		}
 
 		return fileFish;
+	}
+
+	public void testGet() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "memInput.txt";
+
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+		assertFuzzyEquals("freeblocklist\r\n" + "512 512", output);
+	}
+
+	public void testGet2() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "memInput2.txt";
+
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+		String referenceOutput = readFile("mout.txt");
+		assertFuzzyEquals(referenceOutput, output);
+	}
+
+	public void testGet3() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "help.txt";
+
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+		String referenceOutput = readFile("m.txt");
+		assertFuzzyEquals(referenceOutput, output);
+	}
+	public void testGet4() throws NumberFormatException, Exception {
+		SemManager sem = new SemManager();
+		String[] args = new String[3];
+		args[0] = "512";
+		args[1] = "4";
+		args[2] = "h.txt";
+
+		SemManager.main(args);
+		String output = systemOut().getHistory();
+		String referenceOutput = readFile("hout.txt");
+		assertFuzzyEquals(referenceOutput, output);
 	}
 }
