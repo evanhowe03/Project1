@@ -3,14 +3,26 @@ import static org.junit.Assert.*;
 import java.util.Scanner;
 
 import org.junit.Test;
-
+/**
+ * 
+ *
+ * @author Evan Howe (evanhowe03)
+ * @author Pallavi Chavan (pallucha21)
+ * @version 9/14/2023
+ */
 public class CommandProcessorTest extends student.TestCase {
-	
+	/**
+	 * setUp method
+	 */
 	public void setUp() {
 		
 	}
 
-	@Test
+	
+	/**
+	 * tests Scanner 
+	 * @Test
+	 */
 	 public void testScanner() {
     	String testInput = "word1 word2 word3";
     	Scanner scanner = new Scanner(testInput);
@@ -25,7 +37,11 @@ public class CommandProcessorTest extends student.TestCase {
     	assertFalse(scanner.hasNext());
     	
     }
-	
+	/**
+	 * tests that its parsing
+	 * the command words correctly
+	 * @Test
+	 */
 	public void testWords() {
 		String test = "insert search delete print";
 		
