@@ -57,11 +57,11 @@ public class HashTableTest extends student.TestCase {
 	@Test
 	public void testInsert() throws Exception {
 
-		table.insert(3, mySeminar);
+		table.insert(3, mySeminar, null);
 		assertNotNull(table.searchAndReturn(3));
 		assertEquals(mySeminar, table.searchAndReturn(3));
 
-		table.insert(3, mySeminar);
+		table.insert(3, mySeminar, null);
 		String printedText = outputStreamCaptor.toString().trim();
 		assertEquals("Successfully inserted record with ID 3\n" + "ID: 1, Title: fish\n"
 				+ "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
@@ -72,7 +72,7 @@ public class HashTableTest extends student.TestCase {
 	}
 
 	public void testFindIndex() throws Exception {
-		table.insert(3, mySeminar);
+		table.insert(3, mySeminar, null);
 		assertEquals(3, table.findIndex(3));
 
 		assertEquals(-1, table.findIndex(10000));
@@ -97,7 +97,7 @@ public class HashTableTest extends student.TestCase {
 	// Tests the delete function
 	public void testDelete() throws Exception {
 
-		table.insert(3, mySeminar);
+		table.insert(3, mySeminar, null);
 		assertNotNull(table.searchAndReturn(3));
 
 		table.delete(3);
@@ -112,7 +112,7 @@ public class HashTableTest extends student.TestCase {
 	}
 
 	public void testSearchAndReturn() throws Exception {
-		table.insert(4, mySeminar);
+		table.insert(4, mySeminar, null);
 		assertEquals(mySeminar, table.searchAndReturn(4));
 
 		assertNull(table.searchAndReturn(7));
@@ -121,7 +121,7 @@ public class HashTableTest extends student.TestCase {
 	}
 
 	public void testSearch() throws Exception {
-		table.insert(4, mySeminar);
+		table.insert(4, mySeminar, null);
 
 		table.search(4);
 		String printedText = outputStreamCaptor.toString().trim();
@@ -140,7 +140,7 @@ public class HashTableTest extends student.TestCase {
 		assertEquals(50, table.getHashSize());
 		for (int x = 0; x < 30; x++) {
 
-			table.insert(x, mySeminar);
+			table.insert(x, mySeminar, null);
 		}
 		assertEquals(100, table.getHashSize());
 		assertEquals(1, dou.getHashSize());
@@ -185,9 +185,9 @@ public class HashTableTest extends student.TestCase {
 	}
 
 	public void testInsert2() throws Exception {
-		table.insert(1, mySeminar);
+		table.insert(1, mySeminar, null);
 
-		table.insert(1, empty);
+		table.insert(1, empty, null);
 		String printedText = outputStreamCaptor.toString().trim();
 		assertEquals("Successfully inserted record with ID 1\n" + "ID: 1, Title: fish\n"
 				+ "Date: 0610071600, Length: 30, X: 60, Y: 20, Cost: 300\n"
@@ -205,7 +205,7 @@ public class HashTableTest extends student.TestCase {
 	}
 
 	public void testPrint2() throws Exception {
-		table.insert(1, mySeminar);
+		table.insert(1, mySeminar, null);
 		table.print("hashtable");
 		String printedText = outputStreamCaptor.toString().trim();
 		assertEquals("Successfully inserted record with ID 1\n" + "ID: 1, Title: fish\n"
@@ -250,28 +250,28 @@ public class HashTableTest extends student.TestCase {
 	public void testHash3() throws NumberFormatException, Exception {
 		SemManager sem = new SemManager();
 		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
+		args[0] = "516";
+		args[1] = "1";
 		args[2] = "empty.txt";
 		SemManager.main(args);
 
 		String printedText = outputStreamCaptor.toString();
-
-		assertEquals("", printedText);
+		String referenceOutput = readFile("d.txt");
+		assertFuzzyEquals(printedText, referenceOutput);
 
 	}
 
-	public void testHash4() throws NumberFormatException, Exception {
+	public void testSearch4() throws NumberFormatException, Exception {
 		SemManager sem = new SemManager();
 		String[] args = new String[3];
-		args[0] = "512";
-		args[1] = "4";
+		args[0] = "256";
+		args[1] = "2";
 		args[2] = "double.txt";
 		SemManager.main(args);
 
 		String printedText = outputStreamCaptor.toString();
 		String referenceOutput = readFile("doubleoutput.txt");
-		assertFuzzyEquals(printedText, referenceOutput);
+		assertFuzzyEquals(referenceOutput, printedText);
 	}
 
 	public String readFile(String name) {
