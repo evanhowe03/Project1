@@ -6,130 +6,124 @@
  * 
  */
 public class MemoryManager {
-    
-    //taken bkocks
+
+    // taken bkocks
     private byte[] memoryPool;
     private int size;
     private int totalBites;
-    
-    //free blocks an array of linked lists
+
+    // free blocks an array of linked lists
     private FreeBlockList freeBlockList;
-    
+
     // Constructor. poolsize defines the size of the memory pool in bytes
     public MemoryManager(int poolSize) {
-        
+
         totalBites = poolSize;
- 
+
         this.memoryPool = new byte[poolSize];
         this.freeBlockList = new FreeBlockList(poolSize);
         this.size = poolSize;
     }
-    
+
     // Insert a record and return its position handle.
     // space contains the record to be inserted, of length size.
     public void insert(int size) {
-        
+
         Handle member = freeBlockList.createHandle(size);
-        
-        
-        //add the byte version of the size in the memoryPool
-        memoryPool[member.getStart()] = (byte)size;
-        
-        //calculate bytes added
-        if (totalBites - member.getLength() <= 0) {
-            System.out.println("Memory pool expanded to " 
-                + this.size + " bytes");
-            expandMemory();
-            
-            //freeBlockList.doubleList();
-        } 
+
+        System.out.println("totalBites: " + totalBites + " size: " + size + "");
+
+        if (totalBites > size) { // add the byte version of the size in the memoryPool
             totalBites = totalBites - size;
-        
-      
-        //remove the space from the freeBlockList
+        } // calculate bytes added
+        else {
+            expandMemory(member);
+            System.out.println("Memory pool expanded to " + this.size + " bytes");
+            totalBites = totalBites - size;
+            // freeBlockList.doubleList();
+            // totalBites = totalBites - size;
+        }
+        // totalBites = totalBites - size;
+        memoryPool[member.getStart()] = (byte) size;
+        // remove the space from the freeBlockLisy
         freeBlockList.addBlock(size);
-        
-        //System.out.println("after:");
-       //freeBlockList.dump();
+        // totalBites = totalBites - size;
+        // System.out.println("after:");
+        // freeBlockList.dump();
 
     }
-    
+
     public Handle getHandle(int size) {
-        
+
         Handle member = freeBlockList.createHandle(size);
-        
-      //return the handle (to the database)
+
+        // return the handle (to the database)
         return member;
-        
-        
+
     }
-    
-    private void expandMemory() {
-        
-        
+
+    private void expandMemory(Handle ham) {
+
         byte[] newPool = new byte[size * 2];
-        
+
         for (int i = 0; i < size; i++) {
             newPool[i] = memoryPool[i];
         }
-        
+        // System.out.print(" BItES: " + totalBites + "");
+
+        totalBites = totalBites + size;
         this.size = (size * 2);
-        
+
+        // System.out.print(" Bites2: " + totalBites + "");
         this.memoryPool = newPool;
-           
+
     }
-    
+
     // Return the length of the record associated with theHandle
     public int length(Handle theHandle) {
-        
-        //call the getLength method from the handle
+
+        // call the getLength method from the handle
         return theHandle.getLength();
-        
+
     }
-    
+
     // Free a block at the position specified by theHandle.
     // Merge adjacent free blocks.
     public void remove(Handle theHandle) {
-        
-        //remove the byte from the byteArray
-       
-        
-        //add a block of appropriate size to FBL
+
+        // remove the byte from the byteArray
+
+        // add a block of appropriate size to FBL
         freeBlockList.releaseBlock(theHandle);
-        
-        //merge free blocks
+
+        // merge free blocks
         freeBlockList.mergeFreeBlocks();
-        
-        //add back to the totalBytes
+
+        // add back to the totalBytes
         totalBites += theHandle.getLength();
     }
-    
+
     // Return the record with handle posHandle, up to size bytes, by
     // copying it into space.
     // Return the number of bytes actually copied into space.
     public int get(byte[] space, Handle theHandle, int size) {
-        
-        //get the index for space from the handle
+
+        // get the index for space from the handle
         int pos = theHandle.getStart();
-        
-        //grab the byte stored in the index of space
+
+        // grab the byte stored in the index of space
         byte bite = space[pos];
-        
-        //return the integer value of the byte
+
+        // return the integer value of the byte
         return (int) bite;
-        
+
     }
-    
+
     // Dump a printout of the freeblock list
     public void dump() {
-        
-        freeBlockList.dump();
-        
-    }
-    
 
-    
-    
-  
+        freeBlockList.dump();
+
+    }
 
 }
