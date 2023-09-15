@@ -3,15 +3,37 @@ import java.io.*;
 import java.util.*;
 import java.util.Scanner;
 
+/**
+ * @author Pallavi Chavan pallucha21 and Evan Howe evanhowe03
+ *         The command processor class parses the file
+ *         and creates the database class
+ * @version 09/14/23
+ */
 public class CommandProcessor {
-
+    // instantiate the database
     public SemDB database;
 
-    public CommandProcessor(String file, int initialMemorySize, int initialHashSize) throws Exception {
-
+    /**
+     * 
+     * @param file
+     *            this is the command file
+     * @param initialMemorySize
+     *            passed in by the args
+     * @param initialHashSize
+     *            passed in by the args
+     * @throws Exception
+     */
+    public CommandProcessor(
+        String file,
+        int initialMemorySize,
+        int initialHashSize)
+        throws Exception {
+        // set memory size
         int memSize = initialMemorySize;
+        // set hashtable size
         int hashSize = initialHashSize;
-
+        // create the database and pass in the
+        // sizes
         database = new SemDB(memSize, hashSize);
 
         try {
@@ -22,31 +44,45 @@ public class CommandProcessor {
                 String word = scanner.next();
 
                 if (word.equals("insert")) {
-                    // System.out.println("YESY");
                     insert(scanner);
-                } else if (word.equalsIgnoreCase("search")) {
+                }
+                else if (word.equalsIgnoreCase("search")) {
                     search(scanner);
-                } else if (word.equalsIgnoreCase("delete")) {
+                }
+                else if (word.equalsIgnoreCase("delete")) {
                     delete(scanner);
-                } else {
+                }
+                else {
                     print(scanner);
                 }
 
             }
 
             scanner.close();
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        
- 
 
     }
 
+
+    /**
+     * Creates a seminar
+     * Calls the add command
+     * 
+     * @param scanner
+     *            take the
+     *            scanner object
+     * @throws Exception
+     */
     public void insert(Scanner scanner) throws Exception {
 
+        // creates and sets a variable for each
+        // seminar parameter
         int id = scanner.nextInt();
         scanner.nextLine();
+        // trim the extra whitespace off of title
         String title = scanner.nextLine().trim();
         String date = scanner.next();
         int length = scanner.nextInt();
@@ -56,40 +92,59 @@ public class CommandProcessor {
         scanner.nextLine();
         String line = scanner.nextLine();
 
-        // String[] words = line.split(" ");
+        // trim the whitesoace between each keyword
         String[] words = line.trim().split("\\s+");
+        // trim the whitespace for the description
         String des = scanner.nextLine().trim();
-        // this will call the seminar to create an instance of it
-        // System.out.println("INSERT ID: " + id + " TITLE: " + title + " DATE: " + date
-        // + " LENGTH: " + length + " X: " + x
-        // + " Y: " + y + " COST: " + cost + " LINE: " + line + " DES: " + des + "");
 
         // create a Seminar
-        Seminar mySeminar = new Seminar(id, title, date, length, x, y, cost, words, des);
+        Seminar mySeminar = new Seminar(id, title, date, length, x, y, cost,
+            words, des);
 
         // insert the seminar into the table
         database.add(id, mySeminar);
-        //table.printTable();
-
     }
 
+
+    /**
+     * calls the search command
+     * 
+     * @param scanner
+     *            takes the
+     *            scanner object
+     */
     public void search(Scanner scanner) {
+        // seminar we're seraching for
         int key = scanner.nextInt();
         database.search(key);
     }
 
+
+    /**
+     * calls the remove command
+     * 
+     * @param scanner
+     *            takes the
+     *            scanner object
+     */
     public void delete(Scanner scanner) {
+        // seminar we're deleting
         int key = scanner.nextInt();
-        // System.out.println("DELETE: "+delete+"");
         database.remove(key);
     }
 
+
+    /**
+     * calls the print command
+     * 
+     * @param scanner
+     *            takes the
+     *            scanner object
+     */
     public void print(Scanner scanner) {
         String print = scanner.next();
         database.print(print);
-        //table.printTable();
+
     }
-       
- 
 
 }
