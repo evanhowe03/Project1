@@ -27,28 +27,34 @@ public class MemoryManager {
     
     // Insert a record and return its position handle.
     // space contains the record to be inserted, of length size.
-    public void insert(byte[] space, int size) {
+    public void insert(int size) {
         
         Handle member = freeBlockList.createHandle(size);
         
-        //get handle &
-        //remove the space from the freeBlockList
-        freeBlockList.addBlock(size);
         
         //add the byte version of the size in the memoryPool
         memoryPool[member.getStart()] = (byte)size;
         
         //calculate bytes added
-        if (totalBites - size <= 0) {
+        if (totalBites - member.getLength() <= 0) {
+            System.out.println("Memory pool expanded to " 
+                + this.size + " bytes");
             expandMemory();
-        } else {
+            
+            //freeBlockList.doubleList();
+        } 
             totalBites = totalBites - size;
-        }
-
+        
+      
+        //remove the space from the freeBlockList
+        freeBlockList.addBlock(size);
+        
+        //System.out.println("after:");
+       //freeBlockList.dump();
 
     }
     
-    public Handle getHandle(byte[]space, int size) {
+    public Handle getHandle(int size) {
         
         Handle member = freeBlockList.createHandle(size);
         
@@ -59,6 +65,7 @@ public class MemoryManager {
     }
     
     private void expandMemory() {
+        
         
         byte[] newPool = new byte[size * 2];
         
@@ -91,7 +98,7 @@ public class MemoryManager {
         freeBlockList.releaseBlock(theHandle);
         
         //merge free blocks
-        freeBlockList.mergeFreeBlocks(0);
+        freeBlockList.mergeFreeBlocks();
         
         //add back to the totalBytes
         totalBites += theHandle.getLength();
