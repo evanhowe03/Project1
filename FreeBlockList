@@ -115,16 +115,25 @@ public class FreeBlockList {
             doubleList();
             result = true;
             nextHighest = findNextHighest(bestIndex);
-        }
-
-        while (nextHighest != bestIndex)
+          //  freeBlocks.get(bestIndex).remove(0);
+        } else
         {
+            while (nextHighest != bestIndex)
+            {
 
-            split(nextHighest);
-            nextHighest--;
+                split(nextHighest);
+                nextHighest--;
+            }
+
+            freeBlocks.get(bestIndex).remove(0);
         }
-        
-        freeBlocks.get(bestIndex).remove(0);
+        /*
+         * while (nextHighest != bestIndex) {
+         * 
+         * split(nextHighest); nextHighest--; }
+         * 
+         * freeBlocks.get(bestIndex).remove(0);
+         */
         return result;
     }
 
@@ -181,11 +190,11 @@ public class FreeBlockList {
         SinglyLinkedList<FreeBlock> list = new SinglyLinkedList<FreeBlock>();
 
         int fat = ((int) Math.pow(2, newIndex));
-        FreeBlock freshBlock = new FreeBlock(0, fat);
+        FreeBlock freshBlock = new FreeBlock(fat, fat);
         System.out.println(newIndex);
         list.add(freshBlock);
 
-        freeBlocks.add(newIndex , list);
+        freeBlocks.add(newIndex -1, list);
 
         // mergeFreeBlocks();
     }
@@ -241,7 +250,7 @@ public class FreeBlockList {
         }
 
         if (count == freeBlocks.size())
-        {
+        { 
             return true;
         }
         return false;
