@@ -31,25 +31,23 @@ public class MemoryManager {
 
         Handle member = freeBlockList.createHandle(size);
 
-        System.out.println("totalBites: " + totalBites + " size: " + size + "");
-
-        if (totalBites > size) { // add the byte version of the size in the memoryPool
-            totalBites = totalBites - size;
-        } // calculate bytes added
-        else {
-            expandMemory(member);
-            System.out.println("Memory pool expanded to " + this.size + " bytes");
-            totalBites = totalBites - size;
-            // freeBlockList.doubleList();
-            // totalBites = totalBites - size;
-        }
+        //System.out.println("totalBites: " + totalBites + " size: " + size + "");
+        //System.out.println("before: ");
+        //freeBlockList.dump();
+        
         // totalBites = totalBites - size;
-        memoryPool[member.getStart()] = (byte) size;
+      //  memoryPool[member.getStart()] = (byte) size;
+        // remember to un comment and use
         // remove the space from the freeBlockLisy
-        freeBlockList.addBlock(size);
-        // totalBites = totalBites - size;
-        // System.out.println("after:");
-        // freeBlockList.dump();
+        
+        boolean result = freeBlockList.addBlock(size);
+        
+        if (result) {
+            expandMemory();
+        }
+       
+        //System.out.println("after: ");
+        //freeBlockList.dump();
 
     }
 
@@ -62,7 +60,7 @@ public class MemoryManager {
 
     }
 
-    private void expandMemory(Handle ham) {
+    private void expandMemory() {
 
         byte[] newPool = new byte[size * 2];
 
@@ -95,9 +93,14 @@ public class MemoryManager {
 
         // add a block of appropriate size to FBL
         freeBlockList.releaseBlock(theHandle);
-
+        
+        //System.out.println("before merge");
+        //freeBlockList.dump();
         // merge free blocks
         freeBlockList.mergeFreeBlocks();
+        
+        //System.out.println("after merge");
+        //freeBlockList.dump();
 
         // add back to the totalBytes
         totalBites += theHandle.getLength();
