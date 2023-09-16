@@ -14,84 +14,86 @@ public class FreeBlockList {
     public FreeBlockList(int size) {
 
         double x = Math.log10(size) / Math.log10(2);
-        int listSize = (int)x;
+        int listSize = (int) x;
 
         this.freeBlocks = new SinglyLinkedList<SinglyLinkedList<FreeBlock>>();
 
         // creates a list of singly linked lists
         // got the singly linked list code from project 5 in 2114
-        for (int i = 0; i < listSize; i++) {
-            
+        for (int i = 0; i < listSize; i++)
+        {
+
             freeBlocks.add(i, new SinglyLinkedList<FreeBlock>());
         }
-        FreeBlock intializer = new FreeBlock(0, (int)Math.pow(2, listSize));
+        FreeBlock intializer = new FreeBlock(size,
+                (int) Math.pow(2, listSize));
         freeBlocks.get(listSize - 1).add(intializer);
 
     }
 
     private int findStartPos(int size) {
-        
+
         // find the starting position of the data in the freeBlockList
         int indexPos = findBestIndex(size);
-        
-        //get the size of the index list 
+
+        // get the size of the index list
         int multiple = freeBlocks.get(indexPos).size();
-        
-        //get the size of the byte
-        if (indexPos == 0) {
+
+        // get the size of the byte
+        if (indexPos == 0)
+        {
             indexPos = 1;
         }
         int byteSize = (int) Math.pow(2, indexPos + 1);
-        
-        //multiply the size of the byte by how many items 
-        //are in the list
+
+        // multiply the size of the byte by how many items
+        // are in the list
         int result = multiple * byteSize;
-        //System.out.println("this is the start pos" + result);
+        // System.out.println("this is the start pos" + result);
         return result;
     }
-    
-    //returns the literal index it should be inserted at
+
+    // returns the literal index it should be inserted at
     private int findBestIndex(int size) {
 
         double x = (Math.log10(size) / Math.log10(2));
-        int index = (int)x;
+        int index = (int) x;
         return index;
     }
-
 
     // allocates freespace from the appropriate spot in the list
     // based on the size of the byte of data
     public Handle createHandle(int size) {
-        
+
         int index = findBestIndex(size);
         int blockSize = (int) Math.pow(2, (index + 1));
-        
+
         int position = freeBlocks.get(index).size() * blockSize;
-        //System.out.println("this is the position " + position);
-        //System.out.println("this is the size "+newSize);
+        // System.out.println("this is the position " + position);
+        // System.out.println("this is the size "+newSize);
         // create two blocks of index i-1
-        //FreeBlock firstSplit = new FreeBlock(position, blockSize);
-        
-        //int result = findStartPos(size);
-        
+        // FreeBlock firstSplit = new FreeBlock(position, blockSize);
+
+        // int result = findStartPos(size);
+
         Handle newHandle = new Handle(position, blockSize);
 
         // return it to the memory manager
         return newHandle;
 
     }
-    
+
     // adds free space back into the appropriate spot
     public void releaseBlock(Handle memHandle) {
 
         int size = memHandle.getLength();
 
         // extract the starting position from the handle
-        int index = findBestIndex(size);
-        System.out.println("this is the index" + index);
-        int start = memHandle.getStart();
-        
-        System.out.println("this is the start position " + start);
+        int index = findBestIndex(size) - 1;
+        // System.out.println("this is the index" + index);
+        int start = findStartPos(size);
+
+        // System.out.println("this is the start position " + start);
 
         // go to the right spot in freeBlocks
         // add the block of data
@@ -100,43 +102,43 @@ public class FreeBlockList {
 
     }
 
-
-    public void addBlock(int size) {
-
+    public boolean addBlock(int size) {
+        boolean result = false;
         int bestIndex = findBestIndex(size);
-       
+
         int nextHighest = findNextHighest(bestIndex);
-        
-       // System.out.println("this is the next highest " + nextHighest);
-        
-        if (nextHighest == -1) {
+
+        // System.out.println("this is the next highest " + nextHighest);
+
+        if (nextHighest == -1)
+        {
             doubleList();
+            result = true;
             nextHighest = findNextHighest(bestIndex);
         }
 
-
-        while (nextHighest != bestIndex) {
+        while (nextHighest != bestIndex)
+        {
 
             split(nextHighest);
             nextHighest--;
         }
+        
         freeBlocks.get(bestIndex).remove(0);
-
+        return result;
     }
-
 
     private void split(int index) {
 
         int currIndex = index;
         int lowerIndex = index - 1;
 
- 
         int multiple = freeBlocks.get(lowerIndex).size();
         int newSize = (int) Math.pow(2, currIndex);
-      
+
         int position = freeBlocks.get(lowerIndex).size() * newSize;
-        //System.out.println("this is the position " + position);
-        //System.out.println("this is the size "+newSize);
+        // System.out.println("this is the position " + position);
+        // System.out.println("this is the size "+newSize);
         // create two blocks of index i-1
         FreeBlock firstSplit = new FreeBlock(position, newSize);
         FreeBlock secondSplit = new FreeBlock(position + newSize, newSize);
@@ -148,76 +150,77 @@ public class FreeBlockList {
         // remove the last block off of the index
         freeBlocks.get(currIndex).remove(0);
     }
-    
+
     // finds the next highest index that isn't null
-    //returning the literal index
+    // returning the literal index
     private int findNextHighest(int best) {
         int nextHighest = best;
-        
-        for (int x = nextHighest; x < freeBlocks.size(); x++) {
-           
-            if (freeBlocks.get(x).size() > 0) {
+
+        for (int x = nextHighest; x < freeBlocks.size(); x++)
+        {
+
+            if (freeBlocks.get(x).size() > 0)
+            {
 
                 return x;
             }
         }
-        
-        if (freeBlocks.get(nextHighest).size() == 0) {
+
+        if (freeBlocks.get(nextHighest).size() == 0)
+        {
             return -1;
         }
-        
+
         return nextHighest;
     }
 
-    
-
-
     public void doubleList() {
-        
-        System.out.println("doubling the freeblocklist");
-        
+
         int newIndex = freeBlocks.size();
-        
+
         SinglyLinkedList<FreeBlock> list = new SinglyLinkedList<FreeBlock>();
-        
-        int fat = 2*((int)Math.pow(2, newIndex));
+
+        int fat = ((int) Math.pow(2, newIndex));
         FreeBlock freshBlock = new FreeBlock(0, fat);
- 
-        
+        System.out.println(newIndex);
         list.add(freshBlock);
-        
-        freeBlocks.add(newIndex, list);
 
-        //mergeFreeBlocks();
+        freeBlocks.add(newIndex , list);
+
+        // mergeFreeBlocks();
     }
-
 
     // merges adjacent free blocks when possible
     public void mergeFreeBlocks() {
 
         // continue until you reach the end of the freeBlocks list
-        for (int i = 0; i < freeBlocks.size() - 1; i++) {
-            
-            for (int j = 0; j < freeBlocks.get(i).size() - 2; i++) {
-                
-                if (freeBlocks.get(i).size() > 1) {
+        for (int i = 0; i < freeBlocks.size() - 1; i++)
+        {
+
+            for (int j = 0; j < freeBlocks.get(i).size() - 2; i++)
+            {
+
+                if (freeBlocks.get(i).size() > 1)
+                {
                     FreeBlock curr = freeBlocks.get(i).get(j);
                     FreeBlock next = freeBlocks.get(i).get(j + 1);
-                    
+
                     int currStart = curr.getPos();
                     int nextStart = next.getPos();
                     int blockSize = curr.getSize();
-                    
-                    //int startPos = findStartPos(blockSize * 2);
-                    FreeBlock newBlock = new FreeBlock(currStart, blockSize * 2);
-                    //(currStart | blockSize) == (nextStart | blockSize)
-                    if ((currStart^nextStart) == blockSize) {
+
+                    // int startPos = findStartPos(blockSize * 2);
+                    FreeBlock newBlock = new FreeBlock(currStart,
+                            blockSize * 2);
+                    // (currStart | blockSize) == (nextStart | blockSize)
+                    if ((currStart ^ nextStart) == blockSize)
+                    {
                         freeBlocks.get(i + 1).add(newBlock);
                         freeBlocks.get(i).remove(j);
-                        freeBlocks.get(i).remove(j+1);
-                        
+                        freeBlocks.get(i).remove(j + 1);
+
                     }
-                    
+
                 }
             }
 
@@ -225,18 +228,20 @@ public class FreeBlockList {
 
     }
 
-
     private boolean isEmpty() {
 
         int count = 0;
 
-        for (int i = 0; i < freeBlocks.size(); i++) {
-            if (freeBlocks.get(i).isEmpty()) {
+        for (int i = 0; i < freeBlocks.size(); i++)
+        {
+            if (freeBlocks.get(i).isEmpty())
+            {
                 count++;
             }
         }
 
-        if (count == freeBlocks.size()) {
+        if (count == freeBlocks.size())
+        {
             return true;
         }
         return false;
@@ -244,13 +249,17 @@ public class FreeBlockList {
 
     public void dump() {
 
-        for (int x = 0; x < freeBlocks.size(); x++) {
+        for (int x = 0; x < freeBlocks.size(); x++)
+        {
 
-            if (freeBlocks.get(x).size() > 0) {
+            if (freeBlocks.get(x).size() > 0)
+            {
                 int power = (int) Math.pow(2, x + 1);
                 System.out.print(power + ": ");
-                for (int y = 0; y < freeBlocks.get(x).size(); y++) {
-                    System.out.print("" + freeBlocks.get(x).get(y).getPos() + " ");
+                for (int y = 0; y < freeBlocks.get(x).size(); y++)
+                {
+                    System.out.print(
+                            "" + freeBlocks.get(x).get(y).getPos() + " ");
 
                 }
                 System.out.println("");
@@ -258,7 +267,8 @@ public class FreeBlockList {
 
         }
 
-        if (isEmpty()) {
+        if (isEmpty())
+        {
             System.out.println("There are no freeblocks in the memory pool");
         }
 
