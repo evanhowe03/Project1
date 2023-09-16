@@ -31,23 +31,24 @@ public class MemoryManager {
 
         Handle member = freeBlockList.createHandle(size);
 
-        //System.out.println("totalBites: " + totalBites + " size: " + size + "");
-        //System.out.println("before: ");
-        //freeBlockList.dump();
-        
+        // System.out.println("totalBites: " + totalBites + " size: " + size + "");
+        // System.out.println("before: ");
+        // freeBlockList.dump();
+
         // totalBites = totalBites - size;
-      //  memoryPool[member.getStart()] = (byte) size;
+        // memoryPool[member.getStart()] = (byte) size;
         // remember to un comment and use
         // remove the space from the freeBlockLisy
-        
+
         boolean result = freeBlockList.addBlock(size);
-        
-        if (result) {
+    System.out.println("RESULT ::  "+result+"");
+        if (result)
+        {
             expandMemory();
         }
-       
-        //System.out.println("after: ");
-        //freeBlockList.dump();
+
+        // System.out.println("after: ");
+        // freeBlockList.dump();
 
     }
 
@@ -64,7 +65,8 @@ public class MemoryManager {
 
         byte[] newPool = new byte[size * 2];
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++)
+        {
             newPool[i] = memoryPool[i];
         }
         // System.out.print(" BItES: " + totalBites + "");
@@ -74,7 +76,9 @@ public class MemoryManager {
 
         // System.out.print(" Bites2: " + totalBites + "");
         this.memoryPool = newPool;
-
+        System.out.println(
+                "Memory pool expanded to " + memoryPool.length + " bytes");
+        freeBlockList.dump();
     }
 
     // Return the length of the record associated with theHandle
@@ -93,14 +97,14 @@ public class MemoryManager {
 
         // add a block of appropriate size to FBL
         freeBlockList.releaseBlock(theHandle);
-        
-        //System.out.println("before merge");
-        //freeBlockList.dump();
+
+        // System.out.println("before merge");
+        // freeBlockList.dump();
         // merge free blocks
         freeBlockList.mergeFreeBlocks();
-        
-        //System.out.println("after merge");
-        //freeBlockList.dump();
+
+        // System.out.println("after merge");
+        // freeBlockList.dump();
 
         // add back to the totalBytes
         totalBites += theHandle.getLength();
