@@ -13,6 +13,7 @@ public class SemDB {
     // and the memoryManager
     private HashTable table;
     private MemoryManager mem;
+    boolean initial = true;
 
     /**
      * 
@@ -38,9 +39,15 @@ public class SemDB {
      * @throws Exception
      */
     public void add(int id, Seminar sem) throws Exception {
+
         // calculate the byte[] x value for the semianr
         byte[] x = sem.serialize();
-
+        if (initial)
+        {
+            mem.intializeFreeBlock(x.length);
+    
+            initial = false;
+        }
         // Handle identifier = mem.getHandle(x, x.length);
         // Handle identifier = mem.getHandle(x.length);
         // mem.insert(x.length);
