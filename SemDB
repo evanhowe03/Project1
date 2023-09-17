@@ -6,8 +6,7 @@
  * /**
  * 
  * @author Pallavi Chavan pallucha21 and Evan Howe evanhowe03
- * @version (2023-09-14)
- *          The seminar database class
+ * @version (2023-09-14) The seminar database class
  */
 public class SemDB {
     // create instances of the HashTable
@@ -17,10 +16,8 @@ public class SemDB {
 
     /**
      * 
-     * @param initialMemorySize
-     *            initial memory size by args
-     * @param initialHashSize
-     *            initial hash size by args
+     * @param initialMemorySize initial memory size by args
+     * @param initialHashSize   initial hash size by args
      */
     public SemDB(int initialMemorySize, int initialHashSize) {
         // initialize the memManager and hashTable
@@ -33,15 +30,11 @@ public class SemDB {
 
     }
 
-
     /**
-     * Call the memManager and hashtable
-     * insert methods
+     * Call the memManager and hashtable insert methods
      * 
-     * @param id
-     *            also the key
-     * @param sem
-     *            the seminar
+     * @param id  also the key
+     * @param sem the seminar
      * @throws Exception
      */
     public void add(int id, Seminar sem) throws Exception {
@@ -49,27 +42,44 @@ public class SemDB {
         byte[] x = sem.serialize();
 
         // Handle identifier = mem.getHandle(x, x.length);
-        Handle identifier = mem.getHandle(x.length);
-
+        // Handle identifier = mem.getHandle(x.length);
+        // mem.insert(x.length);
+        boolean test = table.searchTest(id);
         // call the hashtable insert
-        boolean result = table.insert(id, sem, identifier);
-        // if they did not collide
-        // call the memory manager insert
-        if (result == true) {
-            // mem.insert(x, x.length);
+
+        if (!test)
+        {
+            Handle identifier = mem.getHandle(x.length);
+            mem.earlyDouble(identifier);
+
+            System.out.println("THE FREE BLOCKS BEFOrE THE INSERT");
+            mem.dump();
             mem.insert(x.length);
 
+            table.insert(id, sem, identifier);
+
+        } else
+        {
+            System.out.println("Search FAILED --" + " There"
+                    + " is no record with ID " + id);
         }
+        System.out.println("THE FREE BLOCKS AFTER THE INSERT");
+        mem.dump();
+        // boolean result = table.insert(id, sem, identifier);
+        // if they did not collide
+        // call the memory manager insert
+        /*
+         * if (result == true) { // mem.insert(x, x.length); mem.insert(x.length);
+         * 
+         * }
+         */
 
     }
 
-
     /**
-     * Call the memManager and hashtable
-     * remove methods
+     * Call the memManager and hashtable remove methods
      * 
-     * @param key
-     *            the key
+     * @param key the key
      */
     public void remove(int key) {
 
@@ -79,19 +89,22 @@ public class SemDB {
         // if the hashtable deletion works
         // then delete it in the memPool
         boolean result = table.delete(key);
-        if (result == true) {
+        if (result == true)
+        {
+
+            System.out.println("BEFORE DELETE");
+            mem.dump();
             mem.remove(thisHandle);
+            System.out.println("AFTER DELETE");
+            mem.dump();
         }
 
     }
 
-
     /**
-     * Call the hashtable
-     * search method
+     * Call the hashtable search method
      * 
-     * @param key
-     *            the key
+     * @param key the key
      */
     public void search(int key) {
 
@@ -99,19 +112,17 @@ public class SemDB {
 
     }
 
-
     /**
-     * Call the memManager and hashtable
-     * print and dump methods
+     * Call the memManager and hashtable print and dump methods
      * 
-     * @param text
-     *            the command
+     * @param text the command
      */
     public void print(String text) {
 
         boolean result = table.print(text);
 
-        if (result == true) {
+        if (result == true)
+        {
             mem.dump();
         }
 
