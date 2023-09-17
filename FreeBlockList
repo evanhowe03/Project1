@@ -66,9 +66,21 @@ public class FreeBlockList {
     public Handle createHandle(int size) {
 
         int index = findBestIndex(size);
+       /* System.out.println("SIZE: " + size + " INDEX: " + index
+                + " freeblocks.size" + freeBlocks.size() + "");
+
+        System.out.println("DOUBLED");
+        int x = (int) (Math.log10(size) / Math.log10(2));
+        System.out.println("DOUBLED" + x + 1);
+        FreeBlockList(x + 1);*/
+        // doubleList(size);
+        // freeBlocks.get(freeBlocks.size()-1)
+        // FreeBlockList();
+
         int blockSize = (int) Math.pow(2, (index + 1));
 
         int position = freeBlocks.get(index).size() * blockSize;
+
         // System.out.println("this is the position " + position);
         // System.out.println("this is the size "+newSize);
         // create two blocks of index i-1
@@ -97,12 +109,14 @@ public class FreeBlockList {
 
         // go to the right spot in freeBlocks
         // add the block of data
-        FreeBlock block = new FreeBlock(start, size);
+
+        FreeBlock block = new FreeBlock(size, size);
         freeBlocks.get(index).add(block);
 
     }
 
     public boolean addBlock(int size) {
+
         boolean result = false;
         int bestIndex = findBestIndex(size);
 
@@ -112,10 +126,11 @@ public class FreeBlockList {
 
         if (nextHighest == -1)
         {
-            doubleList();
+            doubleList(size);
             result = true;
             nextHighest = findNextHighest(bestIndex);
-          //  freeBlocks.get(bestIndex).remove(0);
+
+            // freeBlocks.get(nextHighest).remove(0);
         } else
         {
             while (nextHighest != bestIndex)
@@ -183,18 +198,29 @@ public class FreeBlockList {
         return nextHighest;
     }
 
-    public void doubleList() {
+    public void addBack(int size) {
+        int fat = ((int) Math.pow(2, size));
+        // System.out.println(fat);
+    }
 
+    public void doubleList(int size) {
+    
         int newIndex = freeBlocks.size();
 
         SinglyLinkedList<FreeBlock> list = new SinglyLinkedList<FreeBlock>();
 
         int fat = ((int) Math.pow(2, newIndex));
         FreeBlock freshBlock = new FreeBlock(fat, fat);
-        System.out.println(newIndex);
+        // System.out.println(newIndex);
         list.add(freshBlock);
 
-        freeBlocks.add(newIndex -1, list);
+        freeBlocks.add(newIndex - 1, list);
+        // System.out.println("FREEBLCOKS DOUBLED ; "
+        // + freeBlocks.get(newIndex - 1).get(0).getSize() + "");
+    
+        addBlock(size);
+
+  
 
         // mergeFreeBlocks();
     }
@@ -250,7 +276,7 @@ public class FreeBlockList {
         }
 
         if (count == freeBlocks.size())
-        { 
+        {
             return true;
         }
         return false;
@@ -281,6 +307,36 @@ public class FreeBlockList {
             System.out.println("There are no freeblocks in the memory pool");
         }
 
+    }
+
+    public boolean allEmpty() {
+        for (int x = 0; x < freeBlocks.size(); x++)
+        {
+            if (freeBlocks.get(x).size() > 0)
+            {
+                return false;
+
+            }
+        }
+
+        return true;
+    }
+
+    public boolean spaceToInsert(Handle ham) {
+
+        for (int x = 0; x < freeBlocks.size(); x++)
+        {
+            for (int y = 0; y < freeBlocks.get(x).size(); y++)
+            {
+
+                if (freeBlocks.get(x).get(y).getPos() >= ham.getLength())
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
 }
