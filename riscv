@@ -1,51 +1,64 @@
- .data
-A_IN: .space 40
-    # Fill out your code here
-A_OUT: .space 40
-    # Fill out your code here
+.data
+A_IN:
+    .space 40 # Reserve space for array A_IN (10 integers * 4 bytes each)
+A_OUT:
+    .space 40 # Reserve space for array A_OUT (10 integers * 4 bytes each)
 PROMPT:
     .asciz "Enter an integer: "
 
 .text
-main:  
-    # Load the starting addresses of the arrays
+main:
+    # Load addresses of A_IN and A_OUT into registers
     la a0, A_IN
     la a1, A_OUT
-    li a3, 10
-    
-    #Initialize the loop counter
-    #t0 is the loop counter
-    li t0, 0 #loop index
+    li t0, 0
+    li t1, 10
 
-LOOP1:
-    # Display Prompt
+LOOP:
+    bgt t1, t0, END_LOOP
+
+    # Display prompt
+    li a7, 4 # syscall number for print string
     la a0, PROMPT
-    li a7, 4 # 4 = printString
     ecall
-    
-    #read integer from console
-    li a7, 5 # 5 = readInt
-    ecall #Integer stored in a0   
-    
-    #store integer in A_IN[t0]
-    sw a0, 0(a0)
-    
-    #add one to the counter
-    #check termination condition
+
+    # Receive integer input
+    li a7, 5 # syscall number for read int
+    ecall
+
+    # Store input in A_IN[a2]
+    slli t1, a2, 2 # Multiply loop index by 4 to get offset
+    add t1, t1, a0 # Calculate address in A_IN
+    sw a1, 0(t1) # Store input at the calculated address
+
+    # Increment loop index and repeat
     addi t0, t0, 1
-    blt t0, a3, LOOP1
+    j LOOP
+
+END_LOOP:
+
+    # Initialize loop index and pointers for LOOP2
+    li a2, 0 # Loop index
+    la t2, A_IN # Pointer to A_IN
+    la t3, A_OUT # Pointer to A_OUT
 
 LOOP2:
-    #load value from A_IN
-    lw a2, 36(t0)
-    
-    #store value in A_OUT
-    sw a2, 36(t1)
-    
-    #update loop counter and check termination condition
-    addi t0, t0, 1
-    blt t0, a3, LOOP2
-    
-    #exit the program
-    li a7, 10
-    ecall
+    # Check if we have processed 10 elements
+    beq a2, t0, END_LOOP2
+
+    # Calculate offsets for A_IN and A_OUT
+    slli t1, a2, 2 # Multiply loop index by 4 to get offset
+    add t1, t1, t2 # Calculate address in A_IN
+    add t4, t3, t1 # Calculate address in A_OUT
+
+    # Load from A_IN and store to A_OUT
+    lw a3, 0(t1) # Load from A_IN
+    sw a3, 0(t4) # Store to A_OUT
+
+    # Increment loop index and repeat
+    addi a2, a2, 1
+    j LOOP2
+
+END_LOOP2:
+
+# Continue with your program...
