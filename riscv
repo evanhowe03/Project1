@@ -1,0 +1,51 @@
+ .data
+A_IN: .space 40
+    # Fill out your code here
+A_OUT: .space 40
+    # Fill out your code here
+PROMPT:
+    .asciz "Enter an integer: "
+
+.text
+main:  
+    # Load the starting addresses of the arrays
+    la a0, A_IN
+    la a1, A_OUT
+    li a3, 10
+    
+    #Initialize the loop counter
+    #t0 is the loop counter
+    li t0, 0 #loop index
+
+LOOP1:
+    # Display Prompt
+    la a0, PROMPT
+    li a7, 4 # 4 = printString
+    ecall
+    
+    #read integer from console
+    li a7, 5 # 5 = readInt
+    ecall #Integer stored in a0   
+    
+    #store integer in A_IN[t0]
+    sw a0, 0(a0)
+    
+    #add one to the counter
+    #check termination condition
+    addi t0, t0, 1
+    blt t0, a3, LOOP1
+
+LOOP2:
+    #load value from A_IN
+    lw a2, 36(t0)
+    
+    #store value in A_OUT
+    sw a2, 36(t1)
+    
+    #update loop counter and check termination condition
+    addi t0, t0, 1
+    blt t0, a3, LOOP2
+    
+    #exit the program
+    li a7, 10
+    ecall
