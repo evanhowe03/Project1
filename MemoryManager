@@ -39,14 +39,26 @@ public class MemoryManager {
         // memoryPool[member.getStart()] = (byte) size;
         // remember to un comment and use
         // remove the space from the freeBlockLisy
-
-        boolean result = freeBlockList.addBlock(size);
-    System.out.println("RESULT ::  "+result+"");
-        if (result)
+        // System.out.println(freeBlockList.allEmpty());
+        if (freeBlockList.allEmpty())
         {
+            // System.out.println(freeBlockList.allEmpty());
+            expandMemory();
+
+        } else if (!freeBlockList.spaceToInsert(member))
+        {
+
             expandMemory();
         }
+        // CHANGW
+        // .boolean result =
+        freeBlockList.addBlock(size);
+        // dump();
+        // System.out.println("RESULT :: "+result+"");
 
+        /*
+         * if (result) { expandMemory(); }
+         */
         // System.out.println("after: ");
         // freeBlockList.dump();
 
@@ -78,7 +90,7 @@ public class MemoryManager {
         this.memoryPool = newPool;
         System.out.println(
                 "Memory pool expanded to " + memoryPool.length + " bytes");
-        freeBlockList.dump();
+        // freeBlockList.dump();
     }
 
     // Return the length of the record associated with theHandle
@@ -89,8 +101,17 @@ public class MemoryManager {
 
     }
 
-    // Free a block at the position specified by theHandle.
-    // Merge adjacent free blocks.
+    public void earlyDouble(Handle ham) {
+       
+        if (totalBites < ham.getLength())
+        {
+            System.out.print(ham.getLength());
+            expandMemory();
+        }
+
+    }// Free a block at the position specified by theHandle.
+     // Merge adjacent free blocks.
+
     public void remove(Handle theHandle) {
 
         // remove the byte from the byteArray
@@ -98,11 +119,16 @@ public class MemoryManager {
         // add a block of appropriate size to FBL
         freeBlockList.releaseBlock(theHandle);
 
+        // System.out.println("SISISIISSIISISIS: " + theHandle.getLength());
+        // freeBlockList.addBack(theHandle.getLength());
         // System.out.println("before merge");
         // freeBlockList.dump();
         // merge free blocks
+        System.out.println("BEFORE MERGE");
+        dump();
         freeBlockList.mergeFreeBlocks();
-
+        System.out.println("AFTER MERGE");
+        dump();
         // System.out.println("after merge");
         // freeBlockList.dump();
 
