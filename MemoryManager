@@ -25,8 +25,16 @@ public class MemoryManager {
         this.size = poolSize;
     }
 
-    // Insert a record and return its position handle.
-    // space contains the record to be inserted, of length size.
+    public void intializeFreeBlock(int size) {
+        int x = (int) (Math.log10(size) / Math.log10(2));
+       // x = x + 1;
+    
+        int pow = (int) Math.pow(2, x);
+    
+        freeBlockList = new FreeBlockList(pow);
+    }// Insert a record and return its position handle.
+     // space contains the record to be inserted, of length size.
+
     public void insert(int size) {
 
         Handle member = freeBlockList.createHandle(size);
@@ -102,10 +110,10 @@ public class MemoryManager {
     }
 
     public void earlyDouble(Handle ham) {
-       
-        if (totalBites < ham.getLength())
+
+        while (totalBites < ham.getLength())
         {
-            System.out.print(ham.getLength());
+      
             expandMemory();
         }
 
